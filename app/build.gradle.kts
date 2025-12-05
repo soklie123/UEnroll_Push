@@ -43,6 +43,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.swiperefreshlayout)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -51,7 +52,14 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
+
+    implementation(libs.glide)
+
+    implementation(libs.androidx.navigation.fragment.ktx) // <-- ADD THIS
+    implementation(libs.androidx.navigation.ui.ktx)      // <-- AND THIS
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
 }

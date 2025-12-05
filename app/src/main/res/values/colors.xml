@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#2196F3</color>
-    <color name="primary_dark">#1976D2</color>
+    <color name="blue_sky">#3B82F6</color>
+    <color name="blue_sky_dark">#1E3A8A</color>
+    <color name="blue_flat">#DBEAFE</color>
+    <color name="text_dark">#1F2937</color>
+    <color name="text_dark_flat">#6B7280</color>
+    <color name="background_gray_dark">#757575</color>
+    <color name="background_gray">#F3F4F6</color>
+    <color name="warning_yellow">#F59E0B</color>
+    <color name="warning_flat">#FEF3C7</color>
+    <color name="info_purple">#8B5CF6</color>
+    <color name="error_red">#EF4444</color>
+    <color name="error_flat">#FED7D7</color>
+    <color name="success_green">#4ADE80</color>
+    <color name="success_green_flat">#D1FAE5</color>
+    <color name="green">#35B944</color>
+    <color name="border">#D1D5DB</color>
+    <color name="border_2">#E5E7EB</color>
     <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
-    <color name="gray">#757575</color>
-    <color name="gray_light">#E0E0E0</color>
+
 </resources>

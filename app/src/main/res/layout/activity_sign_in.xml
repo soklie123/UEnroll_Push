@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp"
-    android:background="@color/white">
+    android:background="@color/background_gray">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:layout_marginBottom="40dp"
             android:gravity="center"
             android:text="Student Enrollment"
-            android:textColor="@color/black"
+            android:textColor="@color/text_dark"
             android:textSize="28sp"
             android:textStyle="bold" />
 
@@ -29,7 +29,7 @@
             android:layout_marginBottom="40dp"
             android:gravity="center"
             android:text="Sign in to your student account"
-            android:textColor="@color/gray"
+            android:textColor="@color/text_dark_flat"
             android:textSize="16sp" />
 
         <!-- Email -->
@@ -41,8 +41,8 @@
             app:boxCornerRadiusBottomStart="12dp"
             app:boxCornerRadiusTopEnd="12dp"
             app:boxCornerRadiusTopStart="12dp"
-            app:boxStrokeColor="@color/primary"
-            app:hintTextColor="@color/primary">
+            app:boxStrokeColor="@color/blue_sky"
+            app:hintTextColor="@color/blue_sky">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etEmailSignIn"
@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Email"
                 android:inputType="textEmailAddress"
-                android:textColor="@color/black" />
+                android:textColor="@color/text_dark" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -63,8 +63,10 @@
             app:boxCornerRadiusBottomStart="12dp"
             app:boxCornerRadiusTopEnd="12dp"
             app:boxCornerRadiusTopStart="12dp"
-            app:boxStrokeColor="@color/primary"
-            app:hintTextColor="@color/primary">
+            app:boxStrokeColor="@color/blue_sky"
+            app:hintTextColor="@color/blue_sky"
+            app:endIconMode="password_toggle"
+            app:endIconTint="@color/text_dark_flat">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etPasswordSignIn"
@@ -72,7 +74,8 @@
                 android:layout_height="wrap_content"
                 android:hint="Password"
                 android:inputType="textPassword"
-                android:textColor="@color/black" />
+                android:textColor="@color/text_dark"
+                />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -84,19 +87,19 @@
             android:layout_gravity="end"
             android:layout_marginBottom="24dp"
             android:text="Forgot Password?"
-            android:textColor="@color/primary"
+            android:textColor="@color/blue_sky"
             android:textSize="14sp"
             android:textStyle="bold" />
 
         <!-- Sign In Button -->
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSignIn"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_marginBottom="32dp"
-            android:background="@drawable/button_primary_background"
             android:text="Sign In"
-            android:textColor="@color/white"
+            android:backgroundTint="@color/blue_sky"
+            android:textColor="@color/blue_flat"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -111,7 +114,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="New student?"
-                android:textColor="@color/black"
+                android:textColor="@color/text_dark"
                 android:textSize="14sp" />
 
             <TextView
@@ -120,7 +123,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="Create account"
-                android:textColor="@color/primary"
+                android:textColor="@color/blue_sky"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 

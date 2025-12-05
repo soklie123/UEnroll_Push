@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Circular profile image -->
+    <style name="CircularImage">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item> <!-- Makes the image circular -->
+    </style>
+
+
+    <!-- Base app theme -->
+    <style name="Theme.UniGO" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Primary branding color -->
+        <item name="colorPrimary">@color/blue_sky</item>
+        <item name="colorPrimaryVariant">@color/blue_sky_dark</item>
+        <item name="colorOnPrimary">@color/border</item>
+
+        <!-- Background color -->
+        <item name="android:windowBackground">@color/blue_flat</item>
+
+        <!-- Toolbar -->
+        <item name="actionBarTheme">@style/ThemeOverlay.UniGO.ActionBar</item>
+    </style>
+
+    <!-- Toolbar overlay style -->
+    <style name="ThemeOverlay.UniGO.ActionBar" parent="ThemeOverlay.Material3.ActionBar">
+        <item name="android:textColor">@color/text_dark</item>
+        <item name="titleTextAppearance">@style/TextAppearance.UniGO.ToolbarTitle</item>
+    </style>
+
+    <!-- Toolbar title -->
+    <style name="TextAppearance.UniGO.ToolbarTitle" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textColor">@color/text_dark</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Chip style -->
+    <style name="Widget.UniGO.Chip" parent="Widget.Material3.Chip.Filter">
+        <item name="chipBackgroundColor">@color/blue_sky</item>
+        <item name="android:textColor">@color/text_dark</item>
+    </style>
+
+    <!-- Button style -->
+    <style name="Widget.UniGO.Button.Tonal" parent="Widget.Material3.Button.TonalButton">
+        <item name="android:backgroundTint">@color/blue_sky</item>
+        <item name="android:textColor">@color/border</item>
+        <item name="cornerRadius">24dp</item>
+    </style>
+
+</resources>
