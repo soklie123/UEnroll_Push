@@ -1,14 +1,216 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#E3F2FD"
     tools:context=".fragment.ProfileScreenFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <!-- Header Section (App Logo, Notifications, etc.) -->
+    <!-- This section is part of the MainActivity, not this fragment, -->
+    <!-- so we will leave a placeholder space for it. -->
 
-</FrameLayout>
+    <!-- Main Content Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/main_content_card"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="?attr/actionBarSize"
+        app:cardBackgroundColor="@android:color/white"
+        app:cardCornerRadius="28dp"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="32dp">
+
+                <!-- Dark Mode / More Options Icons -->
+                <ImageView
+                    android:id="@+id/icon_more_options"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="16dp"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_more_vert"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/text_dark" />
+
+                <ImageView
+                    android:id="@+id/icon_dark_mode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_dark_mode"
+                    app:layout_constraintBottom_toBottomOf="@id/icon_more_options"
+                    app:layout_constraintEnd_toStartOf="@id/icon_more_options"
+                    app:layout_constraintTop_toTopOf="@id/icon_more_options"
+                    app:tint="@color/text_dark" />
+
+                <!-- Profile Image Container -->
+                <FrameLayout
+                    android:id="@+id/profile_image_container"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_marginTop="48dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/profile_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_profile_placeholder"
+                        app:shapeAppearanceOverlay="@style/CircularImage"
+                        app:strokeColor="#4CAF50"
+                        app:strokeWidth="2dp" />
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fab_edit_photo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|end"
+                        android:src="@drawable/ic_edit"
+                        app:backgroundTint="@android:color/white"
+                        app:fabCustomSize="36dp"
+                        app:tint="@color/text_dark"
+                        app:elevation="2dp"
+                        app:maxImageSize="20dp" />
+
+                </FrameLayout>
+
+                <!-- User Name -->
+                <TextView
+                    android:id="@+id/user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Ly Yongphat"
+                    android:textColor="@color/text_dark"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/profile_image_container" />
+
+                <!-- User ID -->
+                <TextView
+                    android:id="@+id/user_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="ID: STU-2025-001"
+                    android:textColor="@color/background_gray_dark"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/user_name" />
+
+                <!-- User Info Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/user_info_card"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="24dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="2dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/user_id">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <!-- Email Row -->
+                        <LinearLayout style="@style/ProfileInfoRow">
+                            <ImageView style="@style/ProfileInfoIcon" android:src="@drawable/ic_email" />
+                            <TextView style="@style/ProfileInfoLabel" android:text="Email" />
+                            <TextView style="@style/ProfileInfoValue" android:text="ly@gmail.com" />
+                        </LinearLayout>
+                        <View style="@style/ProfileDivider" />
+                        <!-- Phone Number Row -->
+                        <LinearLayout style="@style/ProfileInfoRow">
+                            <ImageView style="@style/ProfileInfoIcon" android:src="@drawable/ic_phone" />
+                            <TextView style="@style/ProfileInfoLabel" android:text="Phone Number" />
+                            <TextView style="@style/ProfileInfoValue" android:text="+855 964 234 899" />
+                        </LinearLayout>
+                        <View style="@style/ProfileDivider" />
+                        <!-- Department Row -->
+                        <LinearLayout style="@style/ProfileInfoRow">
+                            <ImageView style="@style/ProfileInfoIcon" android:src="@drawable/ic_department" />
+                            <TextView style="@style/ProfileInfoLabel" android:text="Department" />
+                            <TextView style="@style/ProfileInfoValue" android:text="IT Engineering" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Action List -->
+                <LinearLayout
+                    android:id="@+id/action_list"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="24dp"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    app:layout_constraintTop_toBottomOf="@id/user_info_card"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <!-- Edit Profile Action -->
+                    <LinearLayout style="@style/ProfileActionRow">
+                        <ImageView style="@style/ProfileInfoIcon" android:src="@drawable/ic_edit" />
+                        <TextView style="@style/ProfileInfoLabel" android:text="Edit Profile" />
+                        <ImageView style="@style/ProfileActionArrow" />
+                    </LinearLayout>
+
+                    <!-- Change Password Action -->
+                    <LinearLayout style="@style/ProfileActionRow">
+                        <ImageView style="@style/ProfileInfoIcon" android:src="@drawable/ic_password" />
+                        <TextView style="@style/ProfileInfoLabel" android:text="Change Password" />
+                        <ImageView style="@style/ProfileActionArrow" />
+                    </LinearLayout>
+
+                    <!-- Theme Action -->
+                    <LinearLayout style="@style/ProfileActionRow">
+                        <ImageView style="@style/ProfileInfoIcon" android:src="@drawable/ic_theme" />
+                        <TextView style="@style/ProfileInfoLabel" android:text="Theme" />
+                        <ImageView style="@style/ProfileActionArrow" />
+                    </LinearLayout>
+
+                    <!-- Log Out Action -->
+                    <LinearLayout style="@style/ProfileActionRow">
+                        <ImageView style="@style/ProfileInfoIcon" android:src="@drawable/ic_logout" />
+                        <TextView style="@style/ProfileInfoLabel" android:text="Log out" />
+                        <ImageView style="@style/ProfileActionArrow" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
