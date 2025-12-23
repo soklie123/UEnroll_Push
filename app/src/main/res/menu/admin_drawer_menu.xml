@@ -1,4 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
 
+    <!-- Main navigation items -->
+    <group android:id="@+id/group_main" android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/nav_ic_home"
+            android:title="Home" />
+        <item
+            android:id="@+id/nav_faculties"
+            android:icon="@drawable/ic_faculties"
+            android:title="Faculties" />
+        <item
+            android:id="@+id/nav_departments"
+            android:icon="@drawable/ic_departments"
+            android:title="Departments" />
+        <item
+            android:id="@+id/nav_fees"
+            android:icon="@drawable/ic_fees"
+            android:title="Fees" />
+        <item
+            android:id="@+id/nav_enrollments"
+            android:icon="@drawable/ic_enrollments"
+            android:title="Enrollments" />
+        <item
+            android:id="@+id/nav_setting"
+            android:icon="@drawable/ic_settings"
+            android:title="Setting" />
+    </group>
+
+    <!-- Footer items like Logout -->
+    <group android:id="@+id/group_footer" android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_logout"
+            android:title="Logout" />
+    </group>
 </menu>

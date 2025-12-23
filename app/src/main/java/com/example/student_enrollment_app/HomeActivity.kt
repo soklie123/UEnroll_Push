@@ -4,15 +4,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.imageview.ShapeableImageView
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
+import com.example.student_enrollment_app.auth.SignInActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 
 class HomeActivity : AppCompatActivity() {
-
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,53 +20,25 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
 
         auth = FirebaseAuth.getInstance()
-
-        // Check if user is authenticated
-        checkAuthentication()
-
-        // Set up click listeners for toolbar icons
-        setupToolbarIcons()
-
-        // Update welcome text with user name
-        updateWelcomeText()
-    }
-
-    private fun checkAuthentication() {
-        val currentUser = auth.currentUser
-        if (currentUser == null) {
-            // User is not authenticated, redirect to SignIn
+        // 1️ Check if user is authenticated
+        if (auth.currentUser == null) {
             startActivity(Intent(this, SignInActivity::class.java))
             finish()
+            return
         }
+
+        // 2️ Setup NavController with BottomNavigationView
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        val bottomNavView = findViewById<BottomNavigationView>(R.id.bottomNav)
+
+        // This single line connects BottomNavigationView → NavController → fragments
+        NavigationUI.setupWithNavController(bottomNavView, navController)
     }
 
-    private fun setupToolbarIcons() {
-        // Notification icon click
-        findViewById<ImageView>(R.id.iconNotification).setOnClickListener {
-            Toast.makeText(this, "Notifications clicked", Toast.LENGTH_SHORT).show()
-            // Add your notification logic here
-        }
-
-        // Profile icon click
-        findViewById<ShapeableImageView>(R.id.iconProfile).setOnClickListener {
-            Toast.makeText(this, "Profile clicked", Toast.LENGTH_SHORT).show()
-            // Navigate to profile or show user info
-        }
-    }
-
-    private fun updateWelcomeText() {
-        val currentUser = auth.currentUser
-        val welcomeText = findViewById<TextView>(R.id.welcome_text)
-
-        if (currentUser != null) {
-            // Show user's name or email
-            val userName = currentUser.displayName ?: currentUser.email ?: "Student"
-            welcomeText.text = "Welcome, $userName!"
-        } else {
-            welcomeText.text = "Welcome!"
-        }
-    }
-
+    // 3️ Top menu for logout
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_top_actions, menu)
         return true
@@ -78,11 +50,6 @@ class HomeActivity : AppCompatActivity() {
                 signOut()
                 true
             }
-            R.id.action_profile -> {
-                // Handle profile menu item click
-                Toast.makeText(this, "Profile menu clicked", Toast.LENGTH_SHORT).show()
-                true
-            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -90,14 +57,21 @@ class HomeActivity : AppCompatActivity() {
     private fun signOut() {
         auth.signOut()
         Toast.makeText(this, "Signed out successfully", Toast.LENGTH_SHORT).show()
+
         val intent = Intent(this, SignInActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
     }
 
+    // 4 Handle back button properly with Navigation Component
     override fun onBackPressed() {
-        // Prevent going back to sign in/sign up activities
-        moveTaskToBack(true)
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        if (!navController.navigateUp()) {
+            super.onBackPressed()
+        }
     }
 }

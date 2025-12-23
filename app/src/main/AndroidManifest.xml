@@ -11,7 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar">
-
+        <activity
+            android:name=".AdminActivity"
+            android:exported="false" />
         <!-- SPLASH ACTIVITY (MUST BE LAUNCHER) -->
         <activity
             android:name=".SplashActivity"
@@ -19,25 +21,19 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- SIGN IN ACTIVITY -->
+        </activity> <!-- SIGN IN ACTIVITY -->
         <activity
-            android:name=".SignInActivity"
-            android:exported="false" />
-
-        <!-- SIGN UP ACTIVITY -->
+            android:name=".auth.SignInActivity"
+            android:exported="false" /> <!-- SIGN UP ACTIVITY -->
         <activity
-            android:name=".SignUpActivity"
-            android:exported="false" />
-
-        <!-- HOME ACTIVITY -->
+            android:name=".auth.SignUpActivity"
+            android:exported="false" /> <!-- HOME ACTIVITY -->
         <activity
             android:name=".HomeActivity"
             android:exported="false" />
-
     </application>
 
 </manifest>

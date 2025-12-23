@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E3F2FD"
-    tools:context=".fragment.ProfileScreenFragment">
+    tools:context=".user.ProfileScreenFragment">
 
     <!-- Header Section (App Logo, Notifications, etc.) -->
     <!-- This section is part of the MainActivity, not this fragment, -->

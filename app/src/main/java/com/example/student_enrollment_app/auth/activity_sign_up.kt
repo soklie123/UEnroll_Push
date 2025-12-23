@@ -1,11 +1,13 @@
-package com.example.student_enrollment_app
+package com.example.student_enrollment_app.auth
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Patterns
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.student_enrollment_app.HomeActivity
 import com.example.student_enrollment_app.databinding.ActivitySignUpBinding
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -57,7 +59,7 @@ class SignUpActivity : AppCompatActivity() {
             binding.etEmailSignUp.error = "Email is required"
             return false
         }
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             binding.etEmailSignUp.error = "Enter a valid email"
             return false
         }
@@ -101,7 +103,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun showLoading(show: Boolean) {
-        binding.progressBarSignUp.visibility = if (show) android.view.View.VISIBLE else android.view.View.GONE
+        binding.progressBarSignUp.visibility = if (show) View.VISIBLE else View.GONE
         binding.btnSignUp.isEnabled = !show
         binding.tvSignInRedirect.isEnabled = !show
     }

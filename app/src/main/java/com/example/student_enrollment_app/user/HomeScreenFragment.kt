@@ -5,56 +5,64 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.student_enrollment_app.R
+import com.example.student_enrollment_app.databinding.FragmentHomeScreenBinding
+import com.google.firebase.auth.FirebaseAuth
 
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeScreenFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class HomeScreenFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var mParam1: String? = null
-    private var mParam2: String? = null
+    private var _binding: FragmentHomeScreenBinding? = null
+    private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (getArguments() != null) {
-            mParam1 = getArguments()!!.getString(ARG_PARAM1)
-            mParam2 = getArguments()!!.getString(ARG_PARAM2)
-        }
-    }
+    // CORRECTED: The variable should be of type FirebaseAuth
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home_screen, container, false)
+    ): View { // Return type should be non-nullable View
+        _binding = FragmentHomeScreenBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        // TODO: Rename parameter arguments, choose names that match
-        // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-        private const val ARG_PARAM1 = "param1"
-        private const val ARG_PARAM2 = "param2"
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // Initialize the auth variable
+        auth = FirebaseAuth.getInstance()
 
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeScreenFrangment.
-         */
-        // TODO: Rename and change types and number of parameters
-        fun newInstance(param1: String?, param2: String?): HomeScreenFragment {
-            val fragment = HomeScreenFragment()
-            val args = Bundle()
-            args.putString(ARG_PARAM1, param1)
-            args.putString(ARG_PARAM2, param2)
-            fragment.setArguments(args)
-            return fragment
+        updateWelcomeText()
+        setupClickListeners()
+    }
+
+    private fun updateWelcomeText() {
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            val userName =
+                if (currentUser.displayName.isNullOrEmpty()) {
+                    currentUser.email
+                } else {
+                    currentUser.displayName
+                }
+            binding.welcomeText.text = "Welcome ${userName ?: "Student"}! 👋"
+        } else {
+            binding.welcomeText.text = "Welcome Student! 👋"
         }
+    } // CORRECTED: Added the missing closing brace here
+
+    private fun setupClickListeners() {
+        // Example for the "See more" TextView
+        binding.facultySeeMore.setOnClickListener {
+            // TODO: Navigate to a new screen showing all faculties
+        }
+
+        // Example for handling search
+        binding.searchInput.setOnEditorActionListener { v, actionId, event ->
+            // TODO: Handle the search action
+            true
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // Clean up the binding object to avoid memory leaks
+        _binding = null
     }
 }

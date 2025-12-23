@@ -1,17 +1,21 @@
-package com.example.student_enrollment_app
+package com.example.student_enrollment_app.auth
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Patterns
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import com.example.student_enrollment_app.HomeActivity
+import com.example.student_enrollment_app.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
@@ -48,7 +52,7 @@ class SignInActivity : AppCompatActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
         // Set up Google button click listener
-        findViewById<com.google.android.gms.common.SignInButton>(R.id.btnSignInGoogle).setOnClickListener {
+        findViewById<SignInButton>(R.id.btnSignInGoogle).setOnClickListener {
             signInWithGoogle()
         }
     }
@@ -197,7 +201,7 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun showLoading(show: Boolean) {
-        progressBar.visibility = if (show) android.view.View.VISIBLE else android.view.View.GONE
+        progressBar.visibility = if (show) View.VISIBLE else View.GONE
         btnSignIn.isEnabled = !show
         tvSignUpRedirect.isEnabled = !show
         tvForgotPassword.isEnabled = !show

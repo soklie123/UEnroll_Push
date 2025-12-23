@@ -35,7 +35,7 @@ class AdminLogou : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_admin_logou, container, false)
+        return inflater.inflate(R.layout.fragment_admin_logout, container, false)
     }
 
     companion object {

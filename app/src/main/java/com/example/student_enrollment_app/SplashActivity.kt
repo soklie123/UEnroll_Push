@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
+import com.example.student_enrollment_app.auth.SignInActivity
 
 class SplashActivity : AppCompatActivity() {
 

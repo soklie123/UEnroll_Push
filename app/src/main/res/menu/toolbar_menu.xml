@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-  
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_notifications"
+        android:icon="@drawable/ic_notifications"
+        android:title="Notifications"
+        app:actionLayout="@layout/menu_item_notification"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_profile"
+        android:title="Profile"
+        app:actionLayout="@layout/menu_item_profile"
+        app:showAsAction="always" />
 </menu>
