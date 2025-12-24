@@ -1,15 +1,14 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@android:id/background">
-        <shape>
-            <corners android:radius="10dp" />
-            <color android:color="#4DFFFFFF" />
+        <shape android:shape="rectangle">
+            <solid android:color="#E0E0E0"/>
         </shape>
     </item>
+
     <item android:id="@android:id/progress">
         <clip>
-            <shape>
-                <corners android:radius="10dp" />
-                <color android:color="#4CAF50" />
+            <shape android:shape="rectangle">
+                <solid android:color="?attr/colorPrimary"/>
             </shape>
         </clip>
     </item>

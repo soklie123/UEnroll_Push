@@ -7,64 +7,44 @@
     android:background="#E3F2FD"
     tools:context=".user.ProfileScreenFragment">
 
-    <!-- Header Section (App Logo, Notifications, etc.) -->
-    <!-- This section is part of the MainActivity, not this fragment, -->
-    <!-- so we will leave a placeholder space for it. -->
-
-    <!-- Main Content Card -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/main_content_card"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginTop="20dp"
         app:cardBackgroundColor="@android:color/white"
-        app:cardCornerRadius="28dp"
+        app:cardCornerRadius="32dp"
         app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="32dp">
+                android:paddingBottom="40dp">
 
-                <!-- Dark Mode / More Options Icons -->
                 <ImageView
                     android:id="@+id/icon_more_options"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:padding="8dp"
                     android:src="@drawable/ic_more_vert"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/text_dark" />
+                    app:tint="#1A1C1E" />
 
-                <ImageView
-                    android:id="@+id/icon_dark_mode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:padding="8dp"
-                    android:src="@drawable/ic_dark_mode"
-                    app:layout_constraintBottom_toBottomOf="@id/icon_more_options"
-                    app:layout_constraintEnd_toStartOf="@id/icon_more_options"
-                    app:layout_constraintTop_toTopOf="@id/icon_more_options"
-                    app:tint="@color/text_dark" />
-
-                <!-- Profile Image Container -->
                 <FrameLayout
                     android:id="@+id/profile_image_container"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
-                    android:layout_marginTop="48dp"
+                    android:layout_marginTop="32dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -76,8 +56,8 @@
                         android:scaleType="centerCrop"
                         android:src="@drawable/ic_profile_placeholder"
                         app:shapeAppearanceOverlay="@style/CircularImage"
-                        app:strokeColor="#4CAF50"
-                        app:strokeWidth="2dp" />
+                        app:strokeColor="#3F84D4"
+                        app:strokeWidth="3dp" />
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/fab_edit_photo"
@@ -86,131 +66,174 @@
                         android:layout_gravity="bottom|end"
                         android:src="@drawable/ic_edit"
                         app:backgroundTint="@android:color/white"
+                        app:elevation="4dp"
                         app:fabCustomSize="36dp"
-                        app:tint="@color/text_dark"
-                        app:elevation="2dp"
-                        app:maxImageSize="20dp" />
-
+                        app:maxImageSize="20dp"
+                        app:tint="#3F84D4" />
                 </FrameLayout>
 
-                <!-- User Name -->
                 <TextView
-                    android:id="@+id/user_name"
+                    android:id="@+id/userName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Ly Yongphat"
-                    android:textColor="@color/text_dark"
-                    android:textSize="22sp"
+                    android:layout_marginTop="20dp"
+                    android:text="Student Name"
+                    android:textColor="#1A1C1E"
+                    android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/profile_image_container" />
 
-                <!-- User ID -->
                 <TextView
-                    android:id="@+id/user_id"
+                    android:id="@+id/userId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="ID: STU-2025-001"
-                    android:textColor="@color/background_gray_dark"
+                    android:text="ID: STU-2025-XXXXXX"
+                    android:textColor="#74777F"
                     android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/user_name" />
+                    app:layout_constraintTop_toBottomOf="@id/userName" />
 
-                <!-- User Info Card -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/user_info_card"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginEnd="24dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/user_id">
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="32dp"
+                    app:cardBackgroundColor="#F8FBFF"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintTop_toBottomOf="@id/userId"
+                    app:strokeColor="#E1E2E9"
+                    app:strokeWidth="1dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="16dp">
+                        android:padding="24dp">
 
-                        <!-- Email Row -->
-                        <LinearLayout style="@style/ProfileInfoRow">
-                            <ImageView style="@style/ProfileInfoIcon" android:src="@drawable/ic_email" />
-                            <TextView style="@style/ProfileInfoLabel" android:text="Email" />
-                            <TextView style="@style/ProfileInfoValue" android:text="ly@gmail.com" />
-                        </LinearLayout>
-                        <View style="@style/ProfileDivider" />
-                        <!-- Phone Number Row -->
-                        <LinearLayout style="@style/ProfileInfoRow">
-                            <ImageView style="@style/ProfileInfoIcon" android:src="@drawable/ic_phone" />
-                            <TextView style="@style/ProfileInfoLabel" android:text="Phone Number" />
-                            <TextView style="@style/ProfileInfoValue" android:text="+855 964 234 899" />
-                        </LinearLayout>
-                        <View style="@style/ProfileDivider" />
-                        <!-- Department Row -->
-                        <LinearLayout style="@style/ProfileInfoRow">
-                            <ImageView style="@style/ProfileInfoIcon" android:src="@drawable/ic_department" />
-                            <TextView style="@style/ProfileInfoLabel" android:text="Department" />
-                            <TextView style="@style/ProfileInfoValue" android:text="IT Engineering" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_email"
+                                app:tint="#3F84D4" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:text="Email"
+                                android:textColor="#74777F"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/tv_display_email"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="end"
+                                android:text="user@gmail.com"
+                                android:textColor="#1A1C1E"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
                         </LinearLayout>
 
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginVertical="16dp"
+                            android:background="#E1E2E9" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_department"
+                                app:tint="#3F84D4" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:text="Department"
+                                android:textColor="#74777F"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/tv_display_department"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="end"
+                                android:text="Not Enrolled"
+                                android:textColor="#1A1C1E"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Action List -->
-                <LinearLayout
-                    android:id="@+id/action_list"
-                    android:layout_width="0dp"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/logout_card"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="24dp"
-                    android:paddingStart="24dp"
-                    android:paddingEnd="24dp"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="16dp"
+                    app:cardBackgroundColor="#FFF8F8"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp"
                     app:layout_constraintTop_toBottomOf="@id/user_info_card"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:strokeColor="#FFDADA"
+                    app:strokeWidth="1dp">
 
-                    <!-- Edit Profile Action -->
-                    <LinearLayout style="@style/ProfileActionRow">
-                        <ImageView style="@style/ProfileInfoIcon" android:src="@drawable/ic_edit" />
-                        <TextView style="@style/ProfileInfoLabel" android:text="Edit Profile" />
-                        <ImageView style="@style/ProfileActionArrow" />
+                    <LinearLayout
+                        android:id="@+id/btnLogoutAction"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_logout"
+                            app:tint="#FF5252" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:text="Log out"
+                            android:textColor="#FF5252"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_arrow_forward"
+                            app:tint="#FF5252" />
                     </LinearLayout>
-
-                    <!-- Change Password Action -->
-                    <LinearLayout style="@style/ProfileActionRow">
-                        <ImageView style="@style/ProfileInfoIcon" android:src="@drawable/ic_password" />
-                        <TextView style="@style/ProfileInfoLabel" android:text="Change Password" />
-                        <ImageView style="@style/ProfileActionArrow" />
-                    </LinearLayout>
-
-                    <!-- Theme Action -->
-                    <LinearLayout style="@style/ProfileActionRow">
-                        <ImageView style="@style/ProfileInfoIcon" android:src="@drawable/ic_theme" />
-                        <TextView style="@style/ProfileInfoLabel" android:text="Theme" />
-                        <ImageView style="@style/ProfileActionArrow" />
-                    </LinearLayout>
-
-                    <!-- Log Out Action -->
-                    <LinearLayout style="@style/ProfileActionRow">
-                        <ImageView style="@style/ProfileInfoIcon" android:src="@drawable/ic_logout" />
-                        <TextView style="@style/ProfileInfoLabel" android:text="Log out" />
-                        <ImageView style="@style/ProfileActionArrow" />
-                    </LinearLayout>
-
-                </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
         </androidx.core.widget.NestedScrollView>
-
     </com.google.android.material.card.MaterialCardView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

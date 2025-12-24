@@ -3,10 +3,12 @@
     <color name="blue_sky">#3B82F6</color>
     <color name="blue_sky_dark">#1E3A8A</color>
     <color name="blue_flat">#DBEAFE</color>
-    <color name="text_dark">#1F2937</color>
+    <color name="black">#1F2937</color>
     <color name="text_dark_flat">#6B7280</color>
-    <color name="background_gray_dark">#757575</color>
+    <color name="gray_dark">#757575</color>
     <color name="background_gray">#F3F4F6</color>
+    <color name="background_gray_dark">#E0E0E0</color>
+    <color name="text_dark">#212121</color>
     <color name="warning_yellow">#F59E0B</color>
     <color name="warning_flat">#FEF3C7</color>
     <color name="info_purple">#8B5CF6</color>
@@ -19,5 +21,8 @@
     <color name="border_2">#E5E7EB</color>
     <color name="white">#FFFFFF</color>
     <color name="orange">#C44A0F</color>
-
+    <color name="chip_background">#E3F2FD</color>
+    <color name="chip_text">#1A237E</color>
+    <color name="chip_stroke">#BBDEFB</color>
+    <color name="primary">#1A237E</color>
 </resources>

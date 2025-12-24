@@ -8,15 +8,18 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.student_enrollment_app.HomeActivity
 import com.example.student_enrollment_app.databinding.ActivitySignUpBinding
+import com.example.student_enrollment_app.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class SignUpActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignUpBinding
     private lateinit var auth: FirebaseAuth
-
+    private lateinit var db: FirebaseFirestore // Add this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,11 +27,9 @@ class SignUpActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         auth = Firebase.auth
+        db = Firebase.firestore // Initialize Firestore
 
         setupClickListeners()
-
-
-
     }
 
     private fun setupClickListeners() {
@@ -39,11 +40,12 @@ class SignUpActivity : AppCompatActivity() {
             val confirmPassword = binding.etConfirmPassword.text.toString().trim()
 
             if (validateInput(fullName, email, password, confirmPassword)) {
-                signUpWithEmail(email, password)
+                signUpWithEmail(email, password, fullName)
             }
         }
 
         binding.tvSignInRedirect.setOnClickListener {
+            // Ensure SignInActivity exists in your auth package
             startActivity(Intent(this, SignInActivity::class.java))
             finish()
         }
@@ -63,16 +65,8 @@ class SignUpActivity : AppCompatActivity() {
             binding.etEmailSignUp.error = "Enter a valid email"
             return false
         }
-        if (password.isEmpty()) {
-            binding.etPasswordSignUp.error = "Password is required"
-            return false
-        }
         if (password.length < 6) {
             binding.etPasswordSignUp.error = "Password must be at least 6 characters"
-            return false
-        }
-        if (confirmPassword.isEmpty()) {
-            binding.etConfirmPassword.error = "Please confirm your password"
             return false
         }
         if (password != confirmPassword) {
@@ -82,29 +76,44 @@ class SignUpActivity : AppCompatActivity() {
         return true
     }
 
-    private fun signUpWithEmail(email: String, password: String) {
+    private fun signUpWithEmail(email: String, pass: String, fullName: String) {
         showLoading(true)
 
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                showLoading(false)
+        auth.createUserWithEmailAndPassword(email, pass)
+            .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(this, "Account created successfully!", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, HomeActivity::class.java))
-                    finish()
+                    val uid = auth.currentUser?.uid ?: ""
+
+                    // Use your Model
+                    val user = User(
+                        uid = uid,
+                        fullName = fullName,
+                        email = email,
+                        profilePic = "",
+                        enrolledDepartmentId = null
+                    )
+
+                    // Save to Firestore using the initialized 'db'
+                    db.collection("users").document(uid).set(user)
+                        .addOnSuccessListener {
+                            showLoading(false)
+                            Toast.makeText(this, "Account created!", Toast.LENGTH_SHORT).show()
+                            startActivity(Intent(this, HomeActivity::class.java))
+                            finish()
+                        }
+                        .addOnFailureListener { e ->
+                            showLoading(false)
+                            Toast.makeText(this, "Database Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
                 } else {
-                    Toast.makeText(
-                        this,
-                        "Sign up failed: ${task.exception?.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    showLoading(false)
+                    Toast.makeText(this, "Auth Error: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
     }
 
     private fun showLoading(show: Boolean) {
         binding.progressBarSignUp.visibility = if (show) View.VISIBLE else View.GONE
-        binding.btnSignUp.isEnabled = !show
-        binding.tvSignInRedirect.isEnabled = !show
+        binding.btnSignUp.visibility = if (show) View.INVISIBLE else View.VISIBLE
     }
 }

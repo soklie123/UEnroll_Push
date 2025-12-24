@@ -1,60 +1,83 @@
 package com.example.student_enrollment_app.user
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.student_enrollment_app.R
+import com.example.student_enrollment_app.auth.SignInActivity
+import com.example.student_enrollment_app.databinding.FragmentProfileScreenBinding
+import com.example.student_enrollment_app.model.User
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObject
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ProfileScreenFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ProfileScreenFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var mParam1: String? = null
-    private var mParam2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-//        if (getArguments() != null) {
-//            mParam1 = getArguments()!!.getString(ARG_PARAM1)
-//            mParam2 = getArguments()!!.getString(ARG_PARAM2)
-//        }
-    }
+    private var _binding: FragmentProfileScreenBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile_screen, container, false)
+    ): View {
+        _binding = FragmentProfileScreenBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        // TODO: Rename parameter arguments, choose names that match
-        // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-        private const val ARG_PARAM1 = "param1"
-        private const val ARG_PARAM2 = "param2"
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ProfileScreenFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        fun newInstance(param1: String?, param2: String?): ProfileScreenFragment {
-            val fragment = ProfileScreenFragment()
-            val args = Bundle()
-            args.putString(ARG_PARAM1, param1)
-            args.putString(ARG_PARAM2, param2)
-            fragment.setArguments(args)
-            return fragment
+        auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
+
+        loadUserProfile()
+
+        // Handle Logout
+        binding.btnLogoutAction.setOnClickListener {
+            auth.signOut()
+            val intent = Intent(requireContext(), SignInActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
         }
+    }
+
+    private fun loadUserProfile() {
+        val uid = auth.currentUser?.uid ?: return
+
+        db.collection("users").document(uid).get()
+            .addOnSuccessListener { document ->
+                // This converts the Firestore document into your Kotlin User object
+                val user = document.toObject<User>()
+
+                if (user != null) {
+                    // Use the data from Firestore, not just Auth
+                    binding.userName.text = user.fullName
+                    binding.tvDisplayEmail.text = user.email
+
+                    // Set the ID display
+                    val uniqueCode = user.uid.take(6).uppercase()
+                    binding.userId.text = "ID: STU-2025-$uniqueCode"
+
+                    // Check for department
+                    if (user.enrolledDepartmentId != null) {
+                        binding.tvDisplayDepartment.text = user.enrolledDepartmentId
+                    } else {
+                        binding.tvDisplayDepartment.text = "Not Enrolled"
+                    }
+                }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Error fetching profile: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -3,146 +3,160 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="24dp"
-    android:background="@color/background_gray">
+    android:fillViewport="true"
+    android:background="@drawable/login_gradient_bg">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <!-- Header -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:layout_marginBottom="40dp"
-            android:gravity="center"
-            android:text="Student Enrollment"
-            android:textColor="@color/text_dark"
-            android:textSize="28sp"
-            android:textStyle="bold" />
+        android:padding="32dp">
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/tvHeader"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="40dp"
+            android:layout_marginTop="80dp"
+            android:text="Login Here"
+            android:textColor="#1A237E"
+            android:textSize="35sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvSubHeader"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:gravity="center"
-            android:text="Sign in to your student account"
-            android:textColor="@color/text_dark_flat"
-            android:textSize="16sp" />
+            android:text="Welcome back! You’ve been\nmissed!"
+            android:textColor="#78909C"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvHeader" />
 
-        <!-- Email -->
-        <com.google.android.material.textfield.TextInputLayout
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardEmail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:boxCornerRadiusBottomEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp"
-            app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusTopStart="12dp"
-            app:boxStrokeColor="@color/blue_sky"
-            app:hintTextColor="@color/blue_sky">
+            android:layout_height="60dp"
+            android:layout_marginTop="60dp"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="4dp"
+            app:layout_constraintTop_toBottomOf="@id/tvSubHeader">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <EditText
                 android:id="@+id/etEmailSignIn"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Email"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:hint="Enter Email..."
                 android:inputType="textEmailAddress"
-                android:textColor="@color/text_dark" />
+                android:paddingHorizontal="16dp"
+                android:textColor="#1A237E"
+                android:textSize="16sp" />
+        </com.google.android.material.card.MaterialCardView>
 
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Password -->
-        <com.google.android.material.textfield.TextInputLayout
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardPassword"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            app:boxCornerRadiusBottomEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp"
-            app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusTopStart="12dp"
-            app:boxStrokeColor="@color/blue_sky"
-            app:hintTextColor="@color/blue_sky"
-            app:endIconMode="password_toggle"
-            app:endIconTint="@color/text_dark_flat">
+            android:layout_height="60dp"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="4dp"
+            app:layout_constraintTop_toBottomOf="@id/cardEmail">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <EditText
                 android:id="@+id/etPasswordSignIn"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Password"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:hint="Enter password..."
                 android:inputType="textPassword"
-                android:textColor="@color/text_dark"
-                />
+                android:paddingHorizontal="16dp"
+                android:textColor="#1A237E"
+                android:textSize="16sp" />
+        </com.google.android.material.card.MaterialCardView>
 
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Forgot Password -->
         <TextView
             android:id="@+id/tvForgotPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginBottom="24dp"
-            android:text="Forgot Password?"
-            android:textColor="@color/blue_sky"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:layout_marginTop="12dp"
+            android:text="Forgot password!"
+            android:textColor="#3D5AFE"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardPassword" />
 
-        <!-- Sign In Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSignIn"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_marginBottom="32dp"
-            android:text="Sign In"
-            android:backgroundTint="@color/blue_sky"
-            android:textColor="@color/blue_flat"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:layout_height="60dp"
+            android:layout_marginTop="40dp"
+            android:text="Login"
+            android:textAllCaps="false"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:backgroundTint="#448AFF"
+            app:cornerRadius="15dp"
+            app:layout_constraintTop_toBottomOf="@id/tvForgotPassword" />
 
-        <!-- Sign Up Redirect -->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tvSignUpRedirect"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:layout_marginTop="24dp"
+            android:text="Create new account"
+            android:textColor="#455A64"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnSignIn" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New student?"
-                android:textColor="@color/text_dark"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/tvSignUpRedirect"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="Create account"
-                android:textColor="@color/blue_sky"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/btnSignInGoogle"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tvOrContinue"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="36dp"
+            android:text="Or continue with"
+            android:textColor="#3D5AFE"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvSignUpRedirect" />
 
-        <!-- Progress Bar -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btnSignInGoogleCard"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvOrContinue">
+
+            <ImageView
+                android:id="@+id/btnSignInGoogle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="12dp"
+                android:src="@drawable/ic_google_logo" />
+        </com.google.android.material.card.MaterialCardView>
+
         <ProgressBar
             android:id="@+id/progressBarSignIn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

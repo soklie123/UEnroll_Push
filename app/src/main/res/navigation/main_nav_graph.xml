@@ -3,30 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/homeScreenFragment">
 
     <fragment
-        android:id="@+id/homeFragment"
+        android:id="@+id/homeScreenFragment"
         android:name="com.example.student_enrollment_app.user.HomeScreenFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home_screen" />
 
     <fragment
-        android:id="@+id/statusFragment"
+        android:id="@+id/statusScreenFragment"
         android:name="com.example.student_enrollment_app.user.StatusScreenFragment"
         android:label="Status"
         tools:layout="@layout/fragment_status_screen" />
 
     <fragment
-        android:id="@+id/notificationFragment"
+        android:id="@+id/notificationScreenFragment"
         android:name="com.example.student_enrollment_app.user.NotificationScreenFragment"
-        android:label="Notifications"
+        android:label="Notification"
         tools:layout="@layout/fragment_notification_screen" />
 
     <fragment
-        android:id="@+id/profileFragment"
+        android:id="@+id/profileScreenFragment"
         android:name="com.example.student_enrollment_app.user.ProfileScreenFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile_screen" />
-
 </navigation>
