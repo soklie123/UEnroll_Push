@@ -7,5 +7,6 @@ data class Department(
     val seats: Long = 0,
     val seatsAvailable: Long = 0,
     val color: String = "",
+    val logoUrl: String = "",
     val facultyId: String = ""
 )

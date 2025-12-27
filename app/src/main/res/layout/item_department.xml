@@ -8,48 +8,62 @@
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp"
     android:layout_marginVertical="8dp"
-    android:layout_marginHorizontal="8dp"
-    app:cardBackgroundColor="@android:color/transparent">  <!-- Important: Set to transparent -->
+    android:layout_marginHorizontal="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:background="?attr/selectableItemBackground">  <!-- For ripple effect -->
+        android:padding="16dp">
 
-        <TextView
-            android:id="@+id/txtDeptName"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Department Name"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/txtSeats"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0/0 seats available"
-            android:textSize="14sp"
-            android:textColor="@android:color/white"
-            android:alpha="0.9"
-            android:layout_marginTop="4dp"/>
+            <ImageView
+                android:id="@+id/imgDeptLogo"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="12dp"
+                android:scaleType="centerInside"
+                android:contentDescription="Department Logo"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtDeptName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Department Name"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"/>
+
+                <TextView
+                    android:id="@+id/txtSeats"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0/0 seats available"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/white"
+                    android:alpha="0.9"/>
+            </LinearLayout>
+        </LinearLayout>
 
         <ProgressBar
             android:id="@+id/progressSeats"
             style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="8dp"
-            android:layout_marginTop="8dp"
-            android:progress="50"
-            android:max="100"
+            android:layout_marginTop="12dp"
             android:progressTint="@android:color/white"
-            android:progressBackgroundTint="@android:color/white"
-            android:progressBackgroundTintMode="src_over"
             android:alpha="0.7"/>
 
     </LinearLayout>
-
 </com.google.android.material.card.MaterialCardView>
