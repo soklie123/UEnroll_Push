@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_nav_graph"
+    app:startDestination="@id/homeScreenFragment">
+
+    <fragment
+        android:id="@+id/homeScreenFragment"
+        android:name="com.example.student_enrollment_app.user.HomeScreenFragment">
+        <action
+            android:id="@+id/action_home_to_detail"
+            app:destination="@id/departmentDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/departmentDetailFragment"
+        android:name="com.example.student_enrollment_app.ui.DepartmentDetailFragment">
+        <argument
+            android:name="departmentId"
+            app:argType="string" />
+    </fragment>
+</navigation>

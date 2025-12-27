@@ -23,13 +23,11 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Set edge-to-edge display
         setupEdgeToEdge()
 
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Set navigation bar color for Android O and above
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             window.navigationBarColor = Color.parseColor("#F2FFFFFF")
             window.decorView.systemUiVisibility = (window.decorView.systemUiVisibility
@@ -38,16 +36,12 @@ class HomeActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        // 1. Safety Check - Redirect to SignIn if not authenticated
         if (auth.currentUser == null) {
             redirectToSignIn()
             return
         }
 
-        // 2. Setup Navigation
         setupNavigation()
-
-        // 3. Setup Top Bar Listeners
         setupTopBarListeners()
     }
 
@@ -56,8 +50,6 @@ class HomeActivity : AppCompatActivity() {
             clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             statusBarColor = Color.TRANSPARENT
-
-            // Allow content to flow under the status bar
             decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                     or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
@@ -74,35 +66,43 @@ class HomeActivity : AppCompatActivity() {
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        // Sync Bottom Navigation with NavController
         binding.bottomNav.setupWithNavController(navController)
 
-        // Optional: Listen for navigation changes
+        // --- CRITICAL UPDATE START ---
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            // You can update UI based on current destination
             when (destination.id) {
-                R.id.homeScreenFragment -> {  // FIXED: Changed from homeScreenFragment to homeFragment
-                    // Home fragment is active
+                // If we are on the Detail Screen, hide the custom Top Bar and Bottom Nav
+                R.id.departmentDetailFragment -> {
+                    binding.customTopBar.visibility = View.GONE
+                    binding.bottomNav.visibility = View.GONE
                 }
-                R.id.notificationScreenFragment -> {
-                    // Notification fragment is active
-                }
+                // Show them again for Home, Notification, and Profile
+                R.id.homeScreenFragment,
+                R.id.notificationScreenFragment,
                 R.id.profileScreenFragment -> {
-                    // Profile fragment is active
+                    binding.customTopBar.visibility = View.VISIBLE
+                    binding.bottomNav.visibility = View.VISIBLE
+                }
+                else -> {
+                    binding.customTopBar.visibility = View.VISIBLE
+                    binding.bottomNav.visibility = View.VISIBLE
                 }
             }
         }
+        // --- CRITICAL UPDATE END ---
     }
 
     private fun setupTopBarListeners() {
         binding.iconNotification.setOnClickListener {
-            // Navigate to notification screen
-            navController.navigate(R.id.notificationScreenFragment)
+            if (navController.currentDestination?.id != R.id.notificationScreenFragment) {
+                navController.navigate(R.id.notificationScreenFragment)
+            }
         }
 
         binding.iconProfile.setOnClickListener {
-            // Navigate to profile screen
-            navController.navigate(R.id.profileScreenFragment)
+            if (navController.currentDestination?.id != R.id.profileScreenFragment) {
+                navController.navigate(R.id.profileScreenFragment)
+            }
         }
     }
 

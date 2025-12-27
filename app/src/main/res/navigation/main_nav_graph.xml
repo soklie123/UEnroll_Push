@@ -9,7 +9,14 @@
         android:id="@+id/homeScreenFragment"
         android:name="com.example.student_enrollment_app.user.HomeScreenFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_home_screen" />
+        tools:layout="@layout/fragment_home_screen">
+
+        <action
+            android:id="@+id/action_home_to_detail"
+            app:destination="@id/departmentDetailFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+    </fragment>
 
     <fragment
         android:id="@+id/statusScreenFragment"
@@ -28,4 +35,15 @@
         android:name="com.example.student_enrollment_app.user.ProfileScreenFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile_screen" />
+
+    <fragment
+        android:id="@+id/departmentDetailFragment"
+        android:name="com.example.student_enrollment_app.ui.DepartmentDetailFragment"
+        android:label="Department Detail"
+        tools:layout="@layout/fragment_department_detail">
+        <argument
+            android:name="departmentId"
+            app:argType="string" />
+    </fragment>
+
 </navigation>

@@ -4,13 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.student_enrollment_app.R
 import com.example.student_enrollment_app.adapter.FacultyGroupAdapter
 import com.example.student_enrollment_app.databinding.FragmentHomeScreenBinding
+import com.example.student_enrollment_app.model.Department
 import com.example.student_enrollment_app.model.FacultyGroup
 import com.example.student_enrollment_app.repository.DepartmentRepository
 import com.example.student_enrollment_app.repository.FacultyRepository
@@ -39,18 +40,34 @@ class HomeScreenFragment : Fragment() {
         setupRecyclerView()
         loadUserData()
         loadFaculties()
-        loadAllGroupedData() // Start with all groups visible
+        loadAllGroupedData()
+    }
+
+    private fun navigateToDetail(department: Department) {
+        try {
+            // Safety check to prevent crashing if user clicks twice fast
+            if (findNavController().currentDestination?.id == R.id.homeScreenFragment) {
+                val bundle = Bundle().apply {
+                    putString("departmentId", department.id)
+                }
+                // This ID must match the <action> android:id in your nav_graph.xml
+                findNavController().navigate(R.id.action_home_to_detail, bundle)
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("NavError", "Navigation failed: ${e.message}")
+        }
     }
 
     private fun setupRecyclerView() {
         facultyGroupAdapter = FacultyGroupAdapter(emptyList()) { department ->
-            // Handle department click
+            navigateToDetail(department) // Added navigation
         }
         binding.recyclerDepartments.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = facultyGroupAdapter
         }
     }
+
 
     private fun loadUserData() {
         lifecycleScope.launch {
@@ -65,12 +82,10 @@ class HomeScreenFragment : Fragment() {
             val faculties = facultyRepository.getAllFaculties()
             binding.chipGroupFaculties.removeAllViews()
 
-            // Add "All" selection
             binding.chipGroupFaculties.addView(createChip("All", true) {
                 loadAllGroupedData()
             })
 
-            // Add Faculty selections
             faculties.forEach { faculty ->
                 binding.chipGroupFaculties.addView(createChip(faculty.name, false) {
                     loadSingleFacultyGroup(faculty.id, faculty.name)
@@ -79,22 +94,17 @@ class HomeScreenFragment : Fragment() {
         }
     }
 
-    // Refactored: Loads all departments grouped by faculty
     private fun loadAllGroupedData() {
         lifecycleScope.launch {
             try {
-                // 1. Fetch the data from Repository
                 val groupedData = departmentRepository.getGroupedDepartments(facultyRepository)
-
                 if (groupedData.isEmpty()) {
                     showEmptyState()
                 } else {
                     showDataState()
-
-                    // 2. ALWAYS create a new adapter instance for grouped layouts
-                    // to ensure nested RecyclerViews are properly recycled/rebound
+                    // Updated with navigation click listener
                     facultyGroupAdapter = FacultyGroupAdapter(groupedData) { department ->
-                        // Handle click
+                        navigateToDetail(department)
                     }
                     binding.recyclerDepartments.adapter = facultyGroupAdapter
                 }
@@ -104,7 +114,6 @@ class HomeScreenFragment : Fragment() {
         }
     }
 
-    // New: Loads only one specific faculty as a group to maintain the UI style
     private fun loadSingleFacultyGroup(facultyId: String, facultyName: String) {
         lifecycleScope.launch {
             toggleLoading(true)
@@ -122,14 +131,16 @@ class HomeScreenFragment : Fragment() {
         } else {
             binding.recyclerDepartments.visibility = View.VISIBLE
             binding.emptyState.visibility = View.GONE
-            // Re-bind the adapter with the new grouped data
-            facultyGroupAdapter = FacultyGroupAdapter(groups) { /* click logic */ }
+            // Updated with navigation click listener
+            facultyGroupAdapter = FacultyGroupAdapter(groups) { department ->
+                navigateToDetail(department)
+            }
             binding.recyclerDepartments.adapter = facultyGroupAdapter
         }
     }
 
     private fun toggleLoading(isLoading: Boolean) {
-        // You can add a ProgressBar to your XML and toggle it here
+        // Implementation for progress bar if needed
     }
 
     private fun createChip(label: String, isSelected: Boolean, onSelected: () -> Unit): Chip {
