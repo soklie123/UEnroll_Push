@@ -40,8 +40,8 @@ class FacultyGroupAdapter(
 
     override fun getItemCount() = groups.size
 
-    fun updateData(newList: List<FacultyGroup>) {
-        this.groups = newList
+    fun updateData(newGroups: List<FacultyGroup>) {
+        this.groups = newGroups
         notifyDataSetChanged()
     }
 }

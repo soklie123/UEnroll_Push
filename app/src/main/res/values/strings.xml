@@ -9,6 +9,18 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-
-
+    <string name="seats_available_template">%d/%d seats available</string>
+    <string name="select_a_faculty_to_view_departments">Select a faculty to view departments</string>
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="student_name">Student Name</string>
+    <string name="search">Search</string>
+    <string name="search_departments">Search departments...</string>
+    <string name="faculties">Faculties</string>
+    <string name="computer_science">Computer Science</string>
+    <string name="no_departments_found">No departments found</string>
+    <string name="cancel_search">Cancel Search</string>
+    <string name="departments">Departments</string>
+    <string name="empty_sate">Empty Sate</string>
+    <string name="see_more">See more</string>
+    <string name="faculty_of_engineering">Faculty of Engineering</string>
 </resources>

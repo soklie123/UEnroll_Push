@@ -1,6 +1,8 @@
 package com.example.student_enrollment_app.user
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,17 +20,17 @@ import com.example.student_enrollment_app.repository.FacultyRepository
 import com.example.student_enrollment_app.repository.UserRepository
 import com.google.android.material.chip.Chip
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 class HomeScreenFragment : Fragment() {
-
     private var _binding: FragmentHomeScreenBinding? = null
     private val binding get() = _binding!!
-
     private val userRepository = UserRepository()
+    private var isNavigating = false
     private val facultyRepository = FacultyRepository()
     private val departmentRepository = DepartmentRepository()
-
     private lateinit var facultyGroupAdapter: FacultyGroupAdapter
+    private var currentFacultyGroups: List<FacultyGroup> = listOf()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHomeScreenBinding.inflate(inflater, container, false)
@@ -38,12 +40,43 @@ class HomeScreenFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
+        setupSearch() // Call search
         loadUserData()
         loadFaculties()
         loadAllGroupedData()
     }
+    // Implement Search departments Algorithm on HomeScreen
+    private fun setupSearch() {
+        binding.etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                filterData(s.toString())
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+    private fun filterData(query: String){
+        val filteredList = if(query.isBlank()){
+            currentFacultyGroups
+        }else{
+            val lowerCaseQuery = query.lowercase()
+            currentFacultyGroups.mapNotNull { facultyGroup ->
+                val matchingDepartments = facultyGroup.departments.filter { department ->
+                    department.name.lowercase().contains(lowerCaseQuery)
+                }
+                if(matchingDepartments.isNotEmpty()){
+                    facultyGroup.copy(departments = matchingDepartments)
+                }else{
+                    null
+                }
+            }
+        }
+        facultyGroupAdapter.updateData(filteredList)
+    }
 
     private fun navigateToDetail(department: Department) {
+        if(isNavigating) return
+        isNavigating = true
         try {
             // Safety check to prevent crashing if user clicks twice fast
             if (findNavController().currentDestination?.id == R.id.homeScreenFragment) {
@@ -56,6 +89,9 @@ class HomeScreenFragment : Fragment() {
         } catch (e: Exception) {
             android.util.Log.e("NavError", "Navigation failed: ${e.message}")
         }
+        binding.root.postDelayed({
+            isNavigating = false
+        }, 500)
     }
 
     private fun setupRecyclerView() {
@@ -70,10 +106,17 @@ class HomeScreenFragment : Fragment() {
 
 
     private fun loadUserData() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             val user = userRepository.getCurrentUser()
             val name = user?.username ?: user?.name ?: "Student"
-            binding.tvUserName.text = "hi $name"
+            // Dynamic greeting for better UX
+            val greeting = when (Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) {
+                in 0..11 -> "Good Morning!"
+                in 12..16 -> "Good Afternoon!"
+                else -> "Good Evening!"
+            }
+            binding.tvGreeting.text = greeting
+            binding.tvUserName.text = "Hi $name!"
         }
     }
 
@@ -83,11 +126,13 @@ class HomeScreenFragment : Fragment() {
             binding.chipGroupFaculties.removeAllViews()
 
             binding.chipGroupFaculties.addView(createChip("All", true) {
+                binding.etSearch.text.clear() // Clear Search when changing filter
                 loadAllGroupedData()
             })
 
             faculties.forEach { faculty ->
                 binding.chipGroupFaculties.addView(createChip(faculty.name, false) {
+                    binding.etSearch.text.clear()
                     loadSingleFacultyGroup(faculty.id, faculty.name)
                 })
             }
@@ -98,15 +143,12 @@ class HomeScreenFragment : Fragment() {
         lifecycleScope.launch {
             try {
                 val groupedData = departmentRepository.getGroupedDepartments(facultyRepository)
+                currentFacultyGroups = groupedData
                 if (groupedData.isEmpty()) {
                     showEmptyState()
                 } else {
                     showDataState()
-                    // Updated with navigation click listener
-                    facultyGroupAdapter = FacultyGroupAdapter(groupedData) { department ->
-                        navigateToDetail(department)
-                    }
-                    binding.recyclerDepartments.adapter = facultyGroupAdapter
+                    facultyGroupAdapter.updateData(groupedData)
                 }
             } catch (e: Exception) {
                 showEmptyState()
@@ -119,6 +161,7 @@ class HomeScreenFragment : Fragment() {
             toggleLoading(true)
             val departments = departmentRepository.getDepartmentsByFaculty(facultyId)
             val singleGroup = listOf(FacultyGroup(facultyId, facultyName, departments))
+            currentFacultyGroups = singleGroup  // Cache the data
             updateGroupedUI(singleGroup)
         }
     }
@@ -129,13 +172,8 @@ class HomeScreenFragment : Fragment() {
             binding.recyclerDepartments.visibility = View.GONE
             binding.emptyState.visibility = View.VISIBLE
         } else {
-            binding.recyclerDepartments.visibility = View.VISIBLE
-            binding.emptyState.visibility = View.GONE
-            // Updated with navigation click listener
-            facultyGroupAdapter = FacultyGroupAdapter(groups) { department ->
-                navigateToDetail(department)
-            }
-            binding.recyclerDepartments.adapter = facultyGroupAdapter
+            showDataState()
+            facultyGroupAdapter.updateData(groups)
         }
     }
 
@@ -144,9 +182,16 @@ class HomeScreenFragment : Fragment() {
     }
 
     private fun createChip(label: String, isSelected: Boolean, onSelected: () -> Unit): Chip {
-        return Chip(requireContext()).apply {
+        // 1. Get the LayoutInflater from the ChipGroup's context.
+        val inflater = LayoutInflater.from(binding.chipGroupFaculties.context)
+
+        // 2. Inflate the chip from your new layout file.
+        val chip = inflater.inflate(R.layout.chip_filter_layout, binding.chipGroupFaculties, false) as Chip
+
+        // 3. Apply the specific properties to the newly inflated chip.
+        return chip.apply {
             text = label
-            isCheckable = true
+            isCheckable = true // This might be in your style, but setting it here is safe.
             isChecked = isSelected
             setOnClickListener { onSelected() }
         }

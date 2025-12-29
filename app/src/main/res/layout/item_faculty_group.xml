@@ -18,9 +18,9 @@
             android:id="@+id/tvFacultyName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Faculty of Engineering"
+            android:text="@string/faculty_of_engineering"
             android:textColor="#1A237E"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
         <TextView
             android:id="@+id/tvDeptCount"
@@ -42,10 +42,11 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="See more"
+            android:padding="12dp"
+            android:text="@string/see_more"
             android:textAllCaps="false"
             android:textColor="#9E9E9E"
-            app:icon="@drawable/ic_arrow_forward"
+            app:icon="@drawable/ic_right"
             app:iconGravity="textEnd"
             app:iconTint="#9E9E9E" />
     </LinearLayout>

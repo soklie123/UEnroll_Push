@@ -34,11 +34,19 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <!-- Chip style -->
+    <!-- Filter / selectable Chip style -->
     <style name="Widget.UniGO.Chip" parent="Widget.Material3.Chip.Filter">
-        <item name="chipBackgroundColor">@color/blue_sky</item>
-        <item name="android:textColor">@color/text_dark</item>
+        <item name="chipBackgroundColor">@color/chip_background</item>
+        <item name="chipStrokeColor">@color/chip_border</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="android:textColor">@color/chip_text_selector</item>
+        <item name="chipIconTint">@color/blue_sky</item>
+        <item name="chipStartPadding">12dp</item>
+        <item name="chipEndPadding">12dp</item>
+        <item name="chipCornerRadius">16dp</item>
+        <item name="rippleColor">@color/blue_sky</item>
     </style>
+
 
     <!-- Button style -->
     <style name="Widget.UniGO.Button.Tonal" parent="Widget.Material3.Button.TonalButton">

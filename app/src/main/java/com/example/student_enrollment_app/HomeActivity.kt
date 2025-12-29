@@ -66,17 +66,16 @@ class HomeActivity : AppCompatActivity() {
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
+        // Attach BottomNavigation to NavController
         binding.bottomNav.setupWithNavController(navController)
 
-        // --- CRITICAL UPDATE START ---
+        // Hide/show TopBar & BottomNav based on destination
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                // If we are on the Detail Screen, hide the custom Top Bar and Bottom Nav
                 R.id.departmentDetailFragment -> {
                     binding.customTopBar.visibility = View.GONE
                     binding.bottomNav.visibility = View.GONE
                 }
-                // Show them again for Home, Notification, and Profile
                 R.id.homeScreenFragment,
                 R.id.notificationScreenFragment,
                 R.id.profileScreenFragment -> {
@@ -89,20 +88,16 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
         }
-        // --- CRITICAL UPDATE END ---
     }
 
     private fun setupTopBarListeners() {
+        // Safe navigation: only change selected BottomNav item
         binding.iconNotification.setOnClickListener {
-            if (navController.currentDestination?.id != R.id.notificationScreenFragment) {
-                navController.navigate(R.id.notificationScreenFragment)
-            }
+            binding.bottomNav.selectedItemId = R.id.notificationScreenFragment
         }
 
         binding.iconProfile.setOnClickListener {
-            if (navController.currentDestination?.id != R.id.profileScreenFragment) {
-                navController.navigate(R.id.profileScreenFragment)
-            }
+            binding.bottomNav.selectedItemId = R.id.profileScreenFragment
         }
     }
 

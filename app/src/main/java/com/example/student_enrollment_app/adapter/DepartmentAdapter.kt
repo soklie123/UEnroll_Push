@@ -56,8 +56,14 @@ class DepartmentAdapter(
             binding.progressSeats.progressTintList = ColorStateList.valueOf(Color.WHITE)
             binding.progressSeats.progressBackgroundTintList = ColorStateList.valueOf(Color.WHITE)
 
-            binding.root.setOnClickListener {
+            binding.root.setOnClickListener { view ->
+                if(!view.isClickable) return@setOnClickListener
+                view.isEnabled = false
                 onItemClick(department)
+
+                view.postDelayed({
+                    view.isEnabled = true
+                }, 500)
             }
         }
     }
