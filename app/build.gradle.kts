@@ -59,6 +59,13 @@ dependencies {
 
     // Google Sign-In
     implementation("com.google.android.gms:play-services-auth:21.3.0")
+    // Add this line for Firebase Storage
+    implementation("com.google.firebase:firebase-storage:20.3.0")
+
+    // Add this for Firestore (ensure it is the -ktx version for better Kotlin support)
+    implementation("com.google.firebase:firebase-firestore-ktx")
+
+
 
     // Navigation Components
     implementation(libs.androidx.navigation.fragment.ktx)
@@ -66,6 +73,11 @@ dependencies {
 
     // Image Loading
     implementation(libs.glide)
+
+
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
 
     // Testing
     testImplementation(libs.junit)

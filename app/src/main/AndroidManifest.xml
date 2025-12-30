@@ -4,6 +4,13 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- Optional: Add these permissions if you need image/document upload -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- For Android 13+ (API 33+) -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,29 +18,43 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar">
-        <activity
-            android:name=".AdminActivity"
-            android:exported="false" />
-        <!-- SPLASH ACTIVITY (MUST BE LAUNCHER) -->
+
+        <!-- SPLASH ACTIVITY -->
         <activity
             android:name=".SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- SIGN IN ACTIVITY -->
+        </activity>
+
+        <!-- SIGN IN ACTIVITY -->
         <activity
             android:name=".auth.SignInActivity"
-            android:exported="false" /> <!-- SIGN UP ACTIVITY -->
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- SIGN UP ACTIVITY -->
         <activity
             android:name=".auth.SignUpActivity"
-            android:exported="false" /> <!-- HOME ACTIVITY -->
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- HOME ACTIVITY -->
         <activity
             android:name=".HomeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- ENROLL ACTIVITY -->
+        <activity
+            android:name=".ui.EnrollActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
     </application>
 
 </manifest>

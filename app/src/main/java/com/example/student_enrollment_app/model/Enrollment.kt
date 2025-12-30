@@ -4,9 +4,13 @@ import java.util.Date
 import com.google.firebase.Timestamp
 
 data class Enrollment(
-    val id: String = "", // Auto-generated ID
-    val studentId: String = "", // Links to User UID
-    val departmentId: String = "", // Links to Department ID
-    val status: String = "pending", // "pending", "approved", or "rejected"
-    val appliedAt: Timestamp? = null // Firestore Timestamp for tracking application time
+    val firstName: String = "",
+    val lastName: String = "",
+    val email: String = "",
+    val faculty: String = "",
+    val major: String = "",
+    val idCardUrl: String = "",
+    val transcriptUrl: String = "",
+    val photoUrl: String = "",
+    val timestamp: Long = 0L
 )

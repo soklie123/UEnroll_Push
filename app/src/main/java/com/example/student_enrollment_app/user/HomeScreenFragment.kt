@@ -40,12 +40,12 @@ class HomeScreenFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
-        setupSearch() // Call search
+        setupSearch()
         loadUserData()
         loadFaculties()
         loadAllGroupedData()
     }
-    // Implement Search departments Algorithm on HomeScreen
+
     private fun setupSearch() {
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -78,12 +78,12 @@ class HomeScreenFragment : Fragment() {
         if(isNavigating) return
         isNavigating = true
         try {
-            // Safety check to prevent crashing if user clicks twice fast
+
             if (findNavController().currentDestination?.id == R.id.homeScreenFragment) {
                 val bundle = Bundle().apply {
                     putString("departmentId", department.id)
                 }
-                // This ID must match the <action> android:id in your nav_graph.xml
+
                 findNavController().navigate(R.id.action_home_to_detail, bundle)
             }
         } catch (e: Exception) {
@@ -126,7 +126,7 @@ class HomeScreenFragment : Fragment() {
             binding.chipGroupFaculties.removeAllViews()
 
             binding.chipGroupFaculties.addView(createChip("All", true) {
-                binding.etSearch.text.clear() // Clear Search when changing filter
+                binding.etSearch.text.clear()
                 loadAllGroupedData()
             })
 
@@ -178,20 +178,20 @@ class HomeScreenFragment : Fragment() {
     }
 
     private fun toggleLoading(isLoading: Boolean) {
-        // Implementation for progress bar if needed
+
     }
 
     private fun createChip(label: String, isSelected: Boolean, onSelected: () -> Unit): Chip {
-        // 1. Get the LayoutInflater from the ChipGroup's context.
+
         val inflater = LayoutInflater.from(binding.chipGroupFaculties.context)
 
-        // 2. Inflate the chip from your new layout file.
+
         val chip = inflater.inflate(R.layout.chip_filter_layout, binding.chipGroupFaculties, false) as Chip
 
-        // 3. Apply the specific properties to the newly inflated chip.
+
         return chip.apply {
             text = label
-            isCheckable = true // This might be in your style, but setting it here is safe.
+            isCheckable = true
             isChecked = isSelected
             setOnClickListener { onSelected() }
         }
