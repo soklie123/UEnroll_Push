@@ -1,19 +1,25 @@
 package com.example.student_enrollment_app
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.student_enrollment_app.auth.SignInActivity
 import com.example.student_enrollment_app.databinding.ActivityHomeBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
 
 class HomeActivity : AppCompatActivity() {
@@ -21,6 +27,21 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var navController: NavController
     private lateinit var auth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
+
+    // Permission launcher for notification permission (Android 13+)
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            Log.d("NotificationPermission", "Permission granted")
+            Toast.makeText(this, "Notification permission granted", Toast.LENGTH_SHORT).show()
+            getFCMToken()
+        } else {
+            Log.d("NotificationPermission", "Permission denied")
+            Toast.makeText(this, "Notification permission denied", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +59,7 @@ class HomeActivity : AppCompatActivity() {
         }
 
         auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
 
         // Redirect to SignIn if user not logged in
         if (auth.currentUser == null) {
@@ -51,19 +73,11 @@ class HomeActivity : AppCompatActivity() {
         // Handle top bar buttons
         setupTopBarListeners()
 
+        // Request notification permission
+        requestNotificationPermission()
+
         // Handle intent from notification click
         handleNotificationIntent(intent)
-
-        // Get FCM token for this device
-        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val token = task.result
-                Log.d("FCM_TOKEN", token ?: "No token found")
-                // You can send this token to your server/admin if needed
-            } else {
-                Log.e("FCM_TOKEN", "Failed to get FCM token", task.exception)
-            }
-        }
     }
 
     private fun setupEdgeToEdge() {
@@ -123,16 +137,106 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            when {
+                ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED -> {
+                    // Permission already granted
+                    Log.d("NotificationPermission", "Permission already granted")
+                    getFCMToken()
+                }
+                shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
+                    // Show explanation to user and request permission
+                    Toast.makeText(
+                        this,
+                        "Notification permission is needed to receive updates",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+                else -> {
+                    // Request permission directly
+                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+            }
+        } else {
+            // For Android 12 and below, no runtime permission needed
+            getFCMToken()
+        }
+    }
+
+    private fun getFCMToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("FCM_TOKEN", "Fetching FCM token failed", task.exception)
+                return@addOnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+            Log.d("FCM_TOKEN", "FCM Token: $token")
+
+            // Save token to Firestore
+            sendTokenToServer(token)
+        }
+    }
+
+    private fun sendTokenToServer(token: String) {
+        val userId = auth.currentUser?.uid ?: return
+
+        val userTokenData = hashMapOf(
+            "fcmToken" to token,
+            "updatedAt" to com.google.firebase.Timestamp.now()
+        )
+
+        firestore.collection("users")
+            .document(userId)
+            .update(userTokenData as Map<String, Any>)
+            .addOnSuccessListener {
+                Log.d("FCM_TOKEN", "Token saved to Firestore successfully")
+            }
+            .addOnFailureListener { e ->
+                Log.e("FCM_TOKEN", "Error saving token", e)
+
+                // If update fails (document might not exist), try to set it
+                firestore.collection("users")
+                    .document(userId)
+                    .set(userTokenData)
+                    .addOnSuccessListener {
+                        Log.d("FCM_TOKEN", "Token created in Firestore successfully")
+                    }
+                    .addOnFailureListener { error ->
+                        Log.e("FCM_TOKEN", "Error creating token document", error)
+                    }
+            }
+    }
+
     // Handle notifications when activity is opened from a system notification
     private fun handleNotificationIntent(intent: Intent?) {
         val fragmentToOpen = intent?.getStringExtra("openFragment")
-        if (fragmentToOpen == "notifications") {
-            binding.bottomNav.selectedItemId = R.id.notificationScreenFragment
+
+        when (fragmentToOpen) {
+            "notifications" -> {
+                binding.bottomNav.selectedItemId = R.id.notificationScreenFragment
+            }
+            "status" -> {
+                binding.bottomNav.selectedItemId = R.id.homeScreenFragment
+                // You can pass additional data to the fragment if needed
+                val statusId = intent.getStringExtra("statusId")
+                Log.d("NotificationIntent", "Opening status with ID: $statusId")
+            }
+            "profile" -> {
+                binding.bottomNav.selectedItemId = R.id.profileScreenFragment
+            }
         }
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
+        setIntent(intent)
         // Handle notifications if activity already running
         handleNotificationIntent(intent)
     }
