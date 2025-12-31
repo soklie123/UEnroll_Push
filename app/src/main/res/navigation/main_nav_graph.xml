@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
     app:startDestination="@id/homeScreenFragment">
-
+    <!-- Status Home Fragment Click bind to detail-->
     <fragment
         android:id="@+id/homeScreenFragment"
         android:name="com.example.student_enrollment_app.user.HomeScreenFragment"
@@ -17,25 +17,7 @@
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim" />
     </fragment>
-
-    <fragment
-        android:id="@+id/statusScreenFragment"
-        android:name="com.example.student_enrollment_app.user.StatusScreenFragment"
-        android:label="Status"
-        tools:layout="@layout/fragment_status_screen" />
-
-    <fragment
-        android:id="@+id/notificationScreenFragment"
-        android:name="com.example.student_enrollment_app.user.NotificationScreenFragment"
-        android:label="Notification"
-        tools:layout="@layout/fragment_notification_screen" />
-
-    <fragment
-        android:id="@+id/profileScreenFragment"
-        android:name="com.example.student_enrollment_app.user.ProfileScreenFragment"
-        android:label="Profile"
-        tools:layout="@layout/fragment_profile_screen" />
-
+    <!-- Status Home detail Fragment -->
     <fragment
         android:id="@+id/departmentDetailFragment"
         android:name="com.example.student_enrollment_app.ui.DepartmentDetailFragment"
@@ -45,5 +27,47 @@
             android:name="departmentId"
             app:argType="string" />
     </fragment>
+
+    <!-- Status Detail Fragment -->
+    <fragment
+        android:id="@+id/statusScreenFragment"
+        android:name="com.example.student_enrollment_app.user.StatusScreenFragment"
+        android:label="Status"
+        tools:layout="@layout/fragment_status_screen">
+
+        <!--  Navigate to StatusDetailClick -->
+        <action
+            android:id="@+id/action_status_to_detail"
+            app:destination="@id/statusDetailClick"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+    </fragment>
+
+    <!-- Status Detail after click Fragment -->
+    <fragment
+        android:id="@+id/statusDetailClick"
+        android:name="com.example.student_enrollment_app.user.StatusDetailClick"
+        android:label="Status Detail"
+        tools:layout="@layout/fragment_status_detail_click">
+        <argument
+            android:name="statusId"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
+
+    <!-- Status Notification Fragment -->
+    <fragment
+        android:id="@+id/notificationScreenFragment"
+        android:name="com.example.student_enrollment_app.user.NotificationScreenFragment"
+        android:label="Notification"
+        tools:layout="@layout/fragment_notification_screen" />
+    <!-- Status Profile Fragment -->
+    <fragment
+        android:id="@+id/profileScreenFragment"
+        android:name="com.example.student_enrollment_app.user.ProfileScreenFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile_screen" />
+
+
 
 </navigation>

@@ -1,7 +1,11 @@
-import com.example.student_enrollment_app.R
-
-data class Notification(
+data class NotificationItem(
+    val id: String,
     val title: String,
+    val message: String,
     val timestamp: String,
-    val iconRes: Int = R.drawable.ic_notification_info
+    val type: NotificationType = NotificationType.INFO // For icon type
 )
+
+enum class NotificationType {
+    INFO, ALERT
+}

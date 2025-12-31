@@ -23,4 +23,7 @@
     <string name="empty_sate">Empty Sate</string>
     <string name="see_more">See more</string>
     <string name="faculty_of_engineering">Faculty of Engineering</string>
+    <string name="enroll_now">Enroll Now</string>
+    <string name="upload_remaining_documents">Upload Remaining Documents</string>
+    <string name="required_documents">Required Documents:</string>
 </resources>

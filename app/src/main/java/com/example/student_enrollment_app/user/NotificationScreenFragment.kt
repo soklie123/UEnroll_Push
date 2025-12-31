@@ -1,58 +1,89 @@
 package com.example.student_enrollment_app.user
 
+import NotificationAdapter
+import NotificationItem
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.student_enrollment_app.R
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.example.student_enrollment_app.databinding.FragmentNotificationScreenBinding
 
-/**
- * A simple [Fragment] subclass.
- * Use the [NotificationScreenFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class NotificationScreenFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var mParam1: String? = null
-    private var mParam2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private var _binding: FragmentNotificationScreenBinding? = null
+    private val binding get() = _binding!!
 
+    private val notifications = mutableListOf<NotificationItem>()
+    private lateinit var adapter: NotificationAdapter
 
+    // BroadcastReceiver to handle in-app notifications
+    private val notificationReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val title = intent?.getStringExtra("title") ?: return
+            val message = intent.getStringExtra("message") ?: return
+
+            // Add new notification
+            notifications.add(
+                NotificationItem(
+                    id = System.currentTimeMillis().toString(),
+                    title = title,
+                    message = message,
+                    timestamp = "Just now",
+                    type = NotificationType.ALERT
+                )
+            )
+            adapter.notifyItemInserted(notifications.size - 1)
+            binding.recyclerViewNotifications.scrollToPosition(notifications.size - 1)
+
+            // Optional: show Toast
+            Toast.makeText(context, "$title: $message", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Initialize adapter
+        adapter = NotificationAdapter(notifications) { notification ->
+            // Handle click on notification if needed
+        }
+
+        binding.recyclerViewNotifications.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerViewNotifications.adapter = adapter
+
+        adapter.notifyItemInserted(notifications.size - 1)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        LocalBroadcastManager.getInstance(requireContext())
+            .registerReceiver(notificationReceiver, IntentFilter("NEW_NOTIFICATION"))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        LocalBroadcastManager.getInstance(requireContext())
+            .unregisterReceiver(notificationReceiver)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notification_screen, container, false)
+    ): View {
+        _binding = FragmentNotificationScreenBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        // TODO: Rename parameter arguments, choose names that match
-        // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-        private const val ARG_PARAM1 = "param1"
-        private const val ARG_PARAM2 = "param2"
-
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment NotificationScreenFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        fun newInstance(param1: String?, param2: String?): NotificationScreenFragment {
-            val fragment = NotificationScreenFragment()
-            val args = Bundle()
-            args.putString(ARG_PARAM1, param1)
-            args.putString(ARG_PARAM2, param2)
-            fragment.setArguments(args)
-            return fragment
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

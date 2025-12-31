@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.student_enrollment_app.auth.SignInActivity
 import com.example.student_enrollment_app.databinding.ActivityHomeBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.messaging.FirebaseMessaging
 
 class HomeActivity : AppCompatActivity() {
 
@@ -28,6 +30,7 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Set navigation bar color for Android O+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             window.navigationBarColor = Color.parseColor("#F2FFFFFF")
             window.decorView.systemUiVisibility = (window.decorView.systemUiVisibility
@@ -36,13 +39,31 @@ class HomeActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
+        // Redirect to SignIn if user not logged in
         if (auth.currentUser == null) {
             redirectToSignIn()
             return
         }
 
+        // Setup bottom navigation with NavController
         setupNavigation()
+
+        // Handle top bar buttons
         setupTopBarListeners()
+
+        // Handle intent from notification click
+        handleNotificationIntent(intent)
+
+        // Get FCM token for this device
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val token = task.result
+                Log.d("FCM_TOKEN", token ?: "No token found")
+                // You can send this token to your server/admin if needed
+            } else {
+                Log.e("FCM_TOKEN", "Failed to get FCM token", task.exception)
+            }
+        }
     }
 
     private fun setupEdgeToEdge() {
@@ -91,14 +112,29 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setupTopBarListeners() {
-        // Safe navigation: only change selected BottomNav item
+        // Navigate to notifications
         binding.iconNotification.setOnClickListener {
             binding.bottomNav.selectedItemId = R.id.notificationScreenFragment
         }
 
+        // Navigate to profile
         binding.iconProfile.setOnClickListener {
             binding.bottomNav.selectedItemId = R.id.profileScreenFragment
         }
+    }
+
+    // Handle notifications when activity is opened from a system notification
+    private fun handleNotificationIntent(intent: Intent?) {
+        val fragmentToOpen = intent?.getStringExtra("openFragment")
+        if (fragmentToOpen == "notifications") {
+            binding.bottomNav.selectedItemId = R.id.notificationScreenFragment
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        // Handle notifications if activity already running
+        handleNotificationIntent(intent)
     }
 
     override fun onSupportNavigateUp(): Boolean {

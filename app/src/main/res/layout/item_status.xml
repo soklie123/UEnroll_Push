@@ -7,22 +7,30 @@
     android:paddingVertical="12dp">
 
     <ImageView
+        android:id="@+id/imgStatusIcon"
         android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:src="@drawable/ic_close"
-        app:tint="@color/orange" />
+        android:layout_height="24dp" />
+
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_weight="1"
         android:orientation="vertical">
+
         <TextView
+            android:id="@+id/tvStatusTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Enrollment Not Confirmed"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvStatusSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp" />
     </LinearLayout>
+
 </LinearLayout>
-    

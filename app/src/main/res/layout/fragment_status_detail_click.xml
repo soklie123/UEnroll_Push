@@ -8,7 +8,6 @@
     android:background="#F0F4FF"
     tools:context=".user.StatusDetailClick">
 
-    <!-- Toolbar / Header -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
@@ -16,7 +15,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/ic_arrow_forward"
+        app:navigationIcon="@drawable/ic_back"
+        app:navigationIconTint="#3F51B5"
         app:title="Status Detail"
         app:titleTextColor="#3F51B5" />
 
@@ -74,6 +74,8 @@
         tools:text="2/4 of steps completed" />
 
     <!-- RecyclerView for the dynamic list of status cards. -->
+
+    <!-- Need Help? Section -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_status_details"
         android:layout_width="0dp"
@@ -84,6 +86,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/tv_need_help_title"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_steps_completed"
         app:layout_constraintVertical_bias="0.0"
@@ -91,7 +94,6 @@
         tools:itemCount="4"
         tools:listitem="@layout/item_detail_status_completed" />
 
-    <!-- Need Help? Section -->
     <TextView
         android:id="@+id/tv_need_help_title"
         android:layout_width="wrap_content"

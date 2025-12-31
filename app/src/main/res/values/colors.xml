@@ -15,8 +15,8 @@
     <color name="error_red">#EF4444</color>
     <color name="error_flat">#FED7D7</color>
     <color name="success_green">#4ADE80</color>
-    <color name="success_green_flat">#D1FAE5</color>
     <color name="green">#35B944</color>
+    <color name="success_green_flat">#D1FAE5</color>
     <color name="border">#D1D5DB</color>
     <color name="border_2">#E5E7EB</color>
     <color name="white">#FFFFFF</color>
@@ -24,9 +24,9 @@
     <color name="chip_background">#E3F2FD</color>
     <color name="chip_text">#1A237E</color>
     <color name="chip_stroke">#BBDEFB</color>
-    <color name="primary">#1A237E</color>
     <color name="blue_sky_light">#BBDEFB</color>
+    <color name="primary">#1A237E</color>
     <color name="chip_border">#1976D2</color>
-
+    <color name="gray">#C2CAD8</color>
 
 </resources>

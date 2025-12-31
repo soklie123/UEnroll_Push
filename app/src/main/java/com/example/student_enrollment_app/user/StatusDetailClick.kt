@@ -1,53 +1,30 @@
 package com.example.student_enrollment_app.user
 
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.Fragment
+import com.example.student_enrollment_app.R
+import com.example.student_enrollment_app.databinding.FragmentStatusDetailClickBinding
 
-/**
- * A simple [Fragment] subclass.
- * Use the [StatusDetailClick.newInstance] factory method to
- * create an instance of this fragment.
- */
-class StatusDetailClick : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var mParam1: String? = null
-    private var mParam2: String? = null
+class StatusDetailClick : Fragment(R.layout.fragment_status_detail_click) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-//        if (getArguments() != null) {
-//            mParam1 = getArguments()!!.getString(ARG_PARAM1)
-//            mParam2 = getArguments()!!.getString(ARG_PARAM2)
-//        }
-    } //    @Override
-    //    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-    //                             Bundle savedInstanceState) {
-    //        // Inflate the layout for this fragment
-    //        return inflater.inflate(R.layout.fragment_status_detail_click2, container, false);
-    //    }
+    private var _binding: FragmentStatusDetailClickBinding? = null
+    private val binding get() = _binding!!
 
-    companion object {
-        // TODO: Rename parameter arguments, choose names that match
-        // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-        private const val ARG_PARAM1 = "param1"
-        private const val ARG_PARAM2 = "param2"
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentStatusDetailClickBinding.bind(view)
 
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment StatusDetailClick.
-         */
-        // TODO: Rename and change types and number of parameters
-        fun newInstance(param1: String?, param2: String?): StatusDetailClick {
-            val fragment = StatusDetailClick()
-            val args = Bundle()
-            args.putString(ARG_PARAM1, param1)
-            args.putString(ARG_PARAM2, param2)
-            fragment.setArguments(args)
-            return fragment
+        val statusId = arguments?.getString("statusId") ?: "No ID"
+        binding.tvOverallProgressLabel.text = "Status ID: $statusId"
+
+        binding.toolbar.setNavigationOnClickListener {
+            parentFragmentManager.popBackStack()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

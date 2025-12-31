@@ -1,39 +1,45 @@
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.student_enrollment_app.databinding.ItemNotificationBinding
+import com.example.student_enrollment_app.R
 
 class NotificationAdapter(
-    private var notifications: List<Notification>
+    private val notifications: List<NotificationItem>,
+    private val onClick: (NotificationItem) -> Unit
 ) : RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder>() {
 
-    inner class NotificationViewHolder(val binding: ItemNotificationBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(notification: Notification) {
-            binding.textViewNotificationTitle.text = notification.title
-            binding.textViewNotificationTimestamp.text = notification.timestamp
-            binding.imageViewNotificationIcon.setImageResource(notification.iconRes)
-        }
+    inner class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val icon: ImageView = itemView.findViewById(R.id.imageView_notification_icon)
+        val title: TextView = itemView.findViewById(R.id.textView_notification_title)
+        val timestamp: TextView = itemView.findViewById(R.id.textView_notification_timestamp)
+        val card: CardView = itemView.findViewById(R.id.card_notification)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder {
-        val binding = ItemNotificationBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
-        return NotificationViewHolder(binding)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_notification, parent, false)
+        return NotificationViewHolder(view)
     }
+
+    override fun getItemCount() = notifications.size
 
     override fun onBindViewHolder(holder: NotificationViewHolder, position: Int) {
-        holder.bind(notifications[position])
-    }
+        val notification = notifications[position]
 
-    override fun getItemCount(): Int = notifications.size
+        holder.title.text = notification.title
+        holder.timestamp.text = notification.timestamp
 
-    fun updateData(newList: List<Notification>) {
-        notifications = newList
-        notifyDataSetChanged()
+        holder.icon.setImageResource(
+            when (notification.type) {
+                NotificationType.INFO -> R.drawable.ic_notification_info
+                NotificationType.ALERT -> R.drawable.ic_notification_alert
+            }
+        )
+
+        holder.itemView.setOnClickListener { onClick(notification) }
     }
 }

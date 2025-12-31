@@ -4,11 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import com.example.student_enrollment_app.auth.SignInActivity
 import com.example.student_enrollment_app.databinding.ActivitySplashBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.messaging.FirebaseMessaging
 
 class SplashActivity : AppCompatActivity() {
 
@@ -20,6 +22,12 @@ class SplashActivity : AppCompatActivity() {
         // Initialize Binding
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Subscribe to FCM topic
+        FirebaseMessaging.getInstance().subscribeToTopic("all_users")
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) Log.d("FCM", "Subscribed to all_users")
+            }
 
         // 1. Start Animation immediately
         try {

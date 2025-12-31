@@ -1,7 +1,6 @@
 package com.example.student_enrollment_app.ui
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -21,15 +20,13 @@ class DepartmentDetailFragment : Fragment(R.layout.fragment_department_detail) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentDepartmentDetailBinding.bind(view)
 
-
-
-
-        binding.toolbar.setNavigationOnClickListener {
+        // Back button
+        binding.btnBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
 
+        // Enroll button
         binding.btnEnroll.setOnClickListener {
-            // Get the current department data
             val departmentName = binding.txtDetailTitle.text.toString()
             val facultyName = arguments?.getString("facultyName") ?: "Engineering"
 
@@ -40,15 +37,14 @@ class DepartmentDetailFragment : Fragment(R.layout.fragment_department_detail) {
             startActivity(intent)
         }
 
-        // Get the IDs from arguments
+        // Get arguments
         val departmentId = arguments?.getString("departmentId")
         val facultyId = arguments?.getString("facultyId")
-        val facultyName = arguments?.getString("facultyName")
 
         if (departmentId != null) {
             loadDepartmentDetails(facultyId, departmentId)
         } else {
-            Log.e("DetailFragment", "departmentId is null!")
+            Log.e("DepartmentDetail", "departmentId is null!")
         }
     }
 
@@ -56,7 +52,6 @@ class DepartmentDetailFragment : Fragment(R.layout.fragment_department_detail) {
         val db = FirebaseFirestore.getInstance()
         var isDataLoaded = false
 
-        // This list checks all 3 faculty folders from your database
         val facultyFolders = if (facultyId != null) {
             listOf(facultyId)
         } else {
@@ -64,7 +59,7 @@ class DepartmentDetailFragment : Fragment(R.layout.fragment_department_detail) {
         }
 
         for (folder in facultyFolders) {
-            if (isDataLoaded) break // Stop if already found
+            if (isDataLoaded) break
 
             db.collection("faculties")
                 .document(folder)
@@ -72,27 +67,18 @@ class DepartmentDetailFragment : Fragment(R.layout.fragment_department_detail) {
                 .document(departmentId)
                 .get()
                 .addOnSuccessListener { document ->
-                    // Only update UI if the document actually exists in THIS folder
                     if (document != null && document.exists() && isAdded) {
                         val dept = document.toObject(Department::class.java)
                         dept?.let {
                             isDataLoaded = true
 
+                            // Set department info
                             binding.txtDetailTitle.text = it.name
                             binding.txtDescription.text = it.description
-
-                            // 'tuition' is a Number (250) in your console
                             binding.txtTuition.text = "$${it.tuition} per year"
                             binding.txtDuration.text = it.duration
 
-                            // Apply Color (e.g., "#5E2B2B")
-                            try {
-                                val colorHex = if (!it.color.isNullOrEmpty()) it.color else "#1A237E"
-                                binding.headerBackground.setBackgroundColor(Color.parseColor(colorHex))
-                            } catch (e: Exception) {
-                                binding.headerBackground.setBackgroundColor(Color.parseColor("#1A237E"))
-                            }
-
+                            // Load department logo
                             if (!it.logoUrl.isNullOrEmpty()) {
                                 Glide.with(requireContext())
                                     .load(it.logoUrl)

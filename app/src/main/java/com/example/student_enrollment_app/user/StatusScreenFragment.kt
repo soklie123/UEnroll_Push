@@ -1,60 +1,69 @@
 package com.example.student_enrollment_app.user
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.student_enrollment_app.R
+import com.example.student_enrollment_app.adapter.StatusItemAdapter
+import com.example.student_enrollment_app.databinding.FragmentStatusScreenBinding
+import com.example.student_enrollment_app.model.StatusItem
+import com.example.student_enrollment_app.model.StatusType
 
-/**
- * A simple [Fragment] subclass.
- * Use the [StatusScreenFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class StatusScreenFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var mParam1: String? = null
-    private var mParam2: String? = null
+class StatusScreenFragment : Fragment(R.layout.fragment_status_screen) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (getArguments() != null) {
-            mParam1 = getArguments()!!.getString(ARG_PARAM1)
-            mParam2 = getArguments()!!.getString(ARG_PARAM2)
+    private var _binding: FragmentStatusScreenBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var adapter: StatusItemAdapter
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentStatusScreenBinding.bind(view)
+
+        setupRecyclerView()
+        setupViewDetailButton()
+    }
+
+    private fun setupRecyclerView() {
+        val statusList = listOf(
+            StatusItem(
+                title = "Payment Pending",
+                subtitle = "Due: Nov 30",
+                type = StatusType.PENDING
+            ),
+            StatusItem(
+                title = "Enrollment Not Confirmed",
+                subtitle = null,
+                type = StatusType.FAILED
+            ),
+            StatusItem(
+                title = "Documents Submitted",
+                subtitle = "2 of 3 uploaded",
+                type = StatusType.PENDING
+            ),
+            StatusItem(
+                title = "Major Selected",
+                subtitle = "IT Engineering",
+                type = StatusType.COMPLETED
+            )
+        )
+
+        binding.rvStatusItems.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = StatusItemAdapter(statusList)
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_status_screen, container, false)
+    private fun setupViewDetailButton() {
+        binding.btnViewDetail.setOnClickListener {
+            val bundle = Bundle().apply { putString("statusId", "status_123") }
+            findNavController().navigate(R.id.action_status_to_detail, bundle)
+        }
     }
 
-    companion object {
-        // TODO: Rename parameter arguments, choose names that match
-        // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-        private const val ARG_PARAM1 = "param1"
-        private const val ARG_PARAM2 = "param2"
-
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment StatusScreenFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        fun newInstance(param1: String?, param2: String?): StatusScreenFragment {
-            val fragment = StatusScreenFragment()
-            val args = Bundle()
-            args.putString(ARG_PARAM1, param1)
-            args.putString(ARG_PARAM2, param2)
-            fragment.setArguments(args)
-            return fragment
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

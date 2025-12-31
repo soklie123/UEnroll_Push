@@ -180,15 +180,9 @@ class HomeScreenFragment : Fragment() {
     private fun toggleLoading(isLoading: Boolean) {
 
     }
-
     private fun createChip(label: String, isSelected: Boolean, onSelected: () -> Unit): Chip {
-
         val inflater = LayoutInflater.from(binding.chipGroupFaculties.context)
-
-
         val chip = inflater.inflate(R.layout.chip_filter_layout, binding.chipGroupFaculties, false) as Chip
-
-
         return chip.apply {
             text = label
             isCheckable = true
