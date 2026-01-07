@@ -4,8 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8FAFC">
+    android:background="@drawable/bg_enroll_gradient">
 
+    <!-- Top AppBar -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,52 +29,59 @@
                 app:tint="#1E293B" />
 
             <TextView
+                android:id="@+id/txtStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Student Enrollment"
                 android:textColor="#1E293B"
                 android:textSize="18sp"
+                android:textStyle="bold"
                 android:fontFamily="sans-serif-black"
-                app:layout_constraintBottom_toBottomOf="@id/btnBack"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/btnBack" />
-
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/btnBack"
+                app:layout_constraintBottom_toBottomOf="@id/btnBack"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <!-- Scrollable Form -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="32dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:paddingHorizontal="20dp"
+            android:paddingTop="16dp">
 
+            <!-- Selected Faculty Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="#6366F1"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="20dp"
-                app:cardElevation="8dp">
+                app:cardElevation="6dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="24dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
                     <TextView
                         android:id="@+id/txtSelectedFaculty"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Faculty of Engineering"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/blue_sky_dark"
                         android:textSize="20sp"
-                        android:fontFamily="sans-serif-medium" />
+                        android:textStyle="bold"/>
 
                     <TextView
                         android:id="@+id/txtSelectedMajor"
@@ -81,28 +89,27 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="Major: Information Technology"
-                        android:textColor="#C7D2FE"
-                        android:textSize="14sp" />
-
+                        android:textColor="@color/text_dark_flat"
+                        android:textSize="14sp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Personal Information Section -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:text="PERSONAL DETAILS"
+                android:text="Complete Personal Information"
                 android:textColor="#64748B"
-                android:textSize="11sp"
-                android:letterSpacing="0.15"
-                android:textStyle="bold" />
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginBottom="8dp"/>
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
+                app:cardElevation="2dp"
                 app:strokeWidth="1dp"
                 app:strokeColor="#E2E8F0">
 
@@ -118,13 +125,12 @@
                         android:background="@null"
                         android:hint="First Name"
                         android:paddingHorizontal="16dp"
-                        android:inputType="textPersonName"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"/>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#F1F5F9" />
+                        android:background="#F1F5F9"/>
 
                     <EditText
                         android:id="@+id/edtLastName"
@@ -133,36 +139,35 @@
                         android:background="@null"
                         android:hint="Last Name"
                         android:paddingHorizontal="16dp"
-                        android:inputType="textPersonName"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"/>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#F1F5F9" />
+                        android:background="#F1F5F9"/>
 
                     <EditText
                         android:id="@+id/edtEmail"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
                         android:background="@null"
-                        android:hint="Email Address"
+                        android:hint="Email"
                         android:inputType="textEmailAddress"
                         android:paddingHorizontal="16dp"
-                        android:textSize="15sp" />
-
+                        android:textSize="15sp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Document Upload Section -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:text="DOCUMENTS"
+                android:layout_marginTop="24dp"
+                android:text="Document Upload"
                 android:textColor="#64748B"
-                android:textSize="11sp"
-                android:letterSpacing="0.15"
-                android:textStyle="bold" />
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"/>
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -174,7 +179,10 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:divider="@android:color/transparent"
+                    android:showDividers="middle"
+                    android:dividerPadding="16dp">
 
                     <include
                         android:id="@+id/cardIdUpload"
@@ -183,23 +191,21 @@
                     <include
                         android:id="@+id/cardPhotoUpload"
                         layout="@layout/view_upload_item_small" />
-
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <Button
+            <!-- Submit Button -->
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSubmitAnswer"
                 android:layout_width="match_parent"
-                android:layout_height="58dp"
-                android:layout_marginTop="40dp"
-                android:layout_marginBottom="40dp"
-                android:backgroundTint="#6366F1"
-                android:text="Complete Application"
+                android:layout_height="56dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="32dp"
+                android:backgroundTint="@color/green"
+                android:text="Submit Answer"
                 android:textAllCaps="false"
                 android:textSize="16sp"
-                android:fontFamily="sans-serif-medium"
-                app:cornerRadius="16dp" />
-
+                app:cornerRadius="16dp"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

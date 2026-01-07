@@ -10,7 +10,7 @@ import com.example.student_enrollment_app.model.StatusItem
 import com.example.student_enrollment_app.model.StatusType
 
 class StatusItemAdapter(
-    private val items: List<StatusItem>
+    private var items: List<StatusItem>
 ) : RecyclerView.Adapter<StatusItemAdapter.StatusViewHolder>() {
 
     inner class StatusViewHolder(
@@ -18,7 +18,6 @@ class StatusItemAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: StatusItem) {
-
             binding.tvStatusTitle.text = item.title
 
             // Subtitle (optional)
@@ -69,4 +68,10 @@ class StatusItemAdapter(
     }
 
     override fun getItemCount(): Int = items.size
+
+    // New: update list dynamically
+    fun updateList(newList: List<StatusItem>) {
+        items = newList
+        notifyDataSetChanged()
+    }
 }

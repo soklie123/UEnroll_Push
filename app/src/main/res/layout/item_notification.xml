@@ -10,7 +10,8 @@
     android:layout_marginEnd="16dp"
     android:layout_marginBottom="8dp"
     app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    app:cardElevation="2dp"
+    android:foreground="?attr/selectableItemBackground">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraint_layout_notification"
@@ -18,18 +19,27 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Icon for the notification type (e.g., alert, info) -->
+        <!-- Icon with colored background -->
+        <View
+            android:id="@+id/view_icon_background"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_notification_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
             android:id="@+id/imageView_notification_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:src="@drawable/ic_notification_info"
-            tools:tint="#304FFE" />
+            app:layout_constraintStart_toStartOf="@+id/view_icon_background"
+            app:layout_constraintEnd_toEndOf="@+id/view_icon_background"
+            app:layout_constraintTop_toTopOf="@+id/view_icon_background"
+            app:layout_constraintBottom_toBottomOf="@+id/view_icon_background"
+            app:tint="@color/primary"
+            tools:src="@drawable/ic_notification_info" />
 
-        <!-- The main message of the notification -->
+        <!-- Title -->
         <TextView
             android:id="@+id/textView_notification_title"
             android:layout_width="0dp"
@@ -37,24 +47,54 @@
             android:layout_marginStart="16dp"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/imageView_notification_icon"
+            android:textColor="@color/black"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@+id/view_icon_background"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Enrollment opens next week"
-            tools:textColor="#0D47A1" />
+            app:layout_constraintTop_toTopOf="@+id/view_icon_background"
+            tools:text="Enrollment opens next week" />
 
-        <!-- Timestamp showing when the notification was received -->
+        <!-- Message body (optional) -->
+        <TextView
+            android:id="@+id/textView_notification_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="#666666"
+            android:textSize="14sp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/textView_notification_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_notification_title"
+            tools:text="Don't miss out on your chance to register for classes."
+            tools:visibility="visible" />
+
+        <!-- Timestamp -->
         <TextView
             android:id="@+id/textView_notification_timestamp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textColor="@android:color/darker_gray"
+            android:layout_marginTop="8dp"
+            android:textColor="#999999"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="@+id/textView_notification_title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView_notification_title"
-            tools:text="Today, 9:30 AM" />
+            app:layout_constraintTop_toBottomOf="@+id/textView_notification_message"
+            tools:text="2h ago" />
+
+        <!-- Optional: Unread indicator dot -->
+        <View
+            android:id="@+id/view_unread_indicator"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="@drawable/bg_unread_dot"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

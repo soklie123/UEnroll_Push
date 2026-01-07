@@ -36,16 +36,21 @@
 
     <!-- Filter / selectable Chip style -->
     <style name="Widget.UniGO.Chip" parent="Widget.Material3.Chip.Filter">
-        <item name="chipBackgroundColor">@color/chip_background</item>
-        <item name="chipStrokeColor">@color/chip_border</item>
-        <item name="chipStrokeWidth">1dp</item>
+        <!-- Use the correct name of your background color selector -->
+        <item name="chipBackgroundColor">@color/chip_bg_selector</item>
+
         <item name="android:textColor">@color/chip_text_selector</item>
         <item name="chipIconTint">@color/blue_sky</item>
         <item name="chipStartPadding">12dp</item>
         <item name="chipEndPadding">12dp</item>
         <item name="chipCornerRadius">16dp</item>
         <item name="rippleColor">@color/blue_sky</item>
+        <item name="checkedIconVisible">false</item>
+
+        <!-- Also add this to ensure no stroke/border appears -->
+        <item name="chipStrokeWidth">0dp</item>
     </style>
+
 
 
     <!-- Button style -->

@@ -8,17 +8,30 @@
     android:background="#F0F4FF"
     tools:context=".user.StatusDetailClick">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
-        app:layout_constraintEnd_toEndOf="parent"
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_back"
+        app:tint="#3F51B5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/ic_back"
-        app:navigationIconTint="#3F51B5"
-        app:title="Status Detail"
-        app:titleTextColor="#3F51B5" />
+        android:contentDescription="Back" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status Detail"
+        android:textColor="#3F51B5"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/iv_back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_back" />
 
     <!-- Overall Progress Section -->
     <TextView
@@ -26,13 +39,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:text="Overall Progress:"
         android:textColor="#3F51B5"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/iv_back" />
 
     <TextView
         android:id="@+id/tv_overall_progress_percentage"
@@ -74,8 +87,6 @@
         tools:text="2/4 of steps completed" />
 
     <!-- RecyclerView for the dynamic list of status cards. -->
-
-    <!-- Need Help? Section -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_status_details"
         android:layout_width="0dp"
@@ -90,10 +101,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_steps_completed"
         app:layout_constraintVertical_bias="0.0"
-        app:layout_constraintVertical_chainStyle="packed"
         tools:itemCount="4"
         tools:listitem="@layout/item_detail_status_completed" />
 
+    <!-- Need Help? Section -->
     <TextView
         android:id="@+id/tv_need_help_title"
         android:layout_width="wrap_content"

@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Student_Enrollment_App</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="welcome_sokly">Welcome Sokly! 👋</string>
     <string name="content_description_profile">content_description_profile</string>
     <!-- Strings used for fragments for navigation -->
@@ -26,4 +25,6 @@
     <string name="enroll_now">Enroll Now</string>
     <string name="upload_remaining_documents">Upload Remaining Documents</string>
     <string name="required_documents">Required Documents:</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

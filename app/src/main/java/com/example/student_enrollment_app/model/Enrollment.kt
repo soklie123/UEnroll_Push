@@ -4,6 +4,7 @@ import java.util.Date
 import com.google.firebase.Timestamp
 
 data class Enrollment(
+    val userId: String = "",
     val firstName: String = "",
     val lastName: String = "",
     val email: String = "",
@@ -12,5 +13,7 @@ data class Enrollment(
     val idCardUrl: String = "",
     val transcriptUrl: String = "",
     val photoUrl: String = "",
-    val timestamp: Long = 0L
+    val timestamp: Long = 0L,
+    val status: String = "Pending",
+    val confirmationNumber: String = ""
 )

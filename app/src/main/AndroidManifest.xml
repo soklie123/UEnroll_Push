@@ -1,11 +1,26 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.student_enrollment_app">
 
+    <!-- Network -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Notifications -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- Media access -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
+    <!-- Camera (ONLY if really needed) -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <!-- <uses-permission android:name="android.permission.CAMERA" /> -->
 
     <application
         android:allowBackup="true"
@@ -15,21 +30,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar">
 
-        <!-- Firebase Messaging Service -->
+        <!-- Firebase Cloud Messaging -->
         <service
-            android:name=".user.MyFirebaseMessagingService"
+            android:name=".services.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <!-- Default notification metadata -->
+        <!-- Default Notification Channel -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="student_enrollment_channel"/>
+            android:value="student_enrollment_channel" />
 
-        <!-- SPLASH ACTIVITY -->
+        <!-- Splash -->
         <activity
             android:name=".SplashActivity"
             android:exported="true"
@@ -40,30 +55,28 @@
             </intent-filter>
         </activity>
 
-        <!-- SIGN IN ACTIVITY -->
+        <!-- Auth -->
         <activity
             android:name=".auth.SignInActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- SIGN UP ACTIVITY -->
         <activity
             android:name=".auth.SignUpActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- HOME ACTIVITY -->
+        <!-- Home -->
         <activity
             android:name=".HomeActivity"
             android:exported="false"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- ENROLL ACTIVITY -->
+        <!-- Enrollment -->
         <activity
             android:name=".ui.EnrollActivity"
             android:exported="false"
-            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
     </application>

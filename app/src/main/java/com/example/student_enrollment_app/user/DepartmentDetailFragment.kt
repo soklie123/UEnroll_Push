@@ -1,10 +1,11 @@
-package com.example.student_enrollment_app.ui
+package com.example.student_enrollment_app.user
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.student_enrollment_app.R
 import com.example.student_enrollment_app.databinding.FragmentDepartmentDetailBinding
@@ -15,6 +16,8 @@ class DepartmentDetailFragment : Fragment(R.layout.fragment_department_detail) {
 
     private var _binding: FragmentDepartmentDetailBinding? = null
     private val binding get() = _binding!!
+
+    private var currentDepartment: Department? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -27,14 +30,18 @@ class DepartmentDetailFragment : Fragment(R.layout.fragment_department_detail) {
 
         // Enroll button
         binding.btnEnroll.setOnClickListener {
-            val departmentName = binding.txtDetailTitle.text.toString()
-            val facultyName = arguments?.getString("facultyName") ?: "Engineering"
+            currentDepartment?.let { dept ->
+                val bundle = Bundle().apply {
+                    putString("facultyName", arguments?.getString("facultyName") ?: "")
+                    putString("departmentName", dept.name)
+                }
 
-            val intent = Intent(requireContext(), EnrollActivity::class.java).apply {
-                putExtra("FACULTY_NAME", facultyName)
-                putExtra("MAJOR_NAME", departmentName)
+                findNavController().navigate(
+                    R.id.action_detail_to_enrollment,
+                    bundle
+                )
             }
-            startActivity(intent)
+            setupViewDetailButton()
         }
 
         // Get arguments
@@ -45,6 +52,12 @@ class DepartmentDetailFragment : Fragment(R.layout.fragment_department_detail) {
             loadDepartmentDetails(facultyId, departmentId)
         } else {
             Log.e("DepartmentDetail", "departmentId is null!")
+        }
+    }
+    private fun setupViewDetailButton() {
+        binding.btnEnroll.setOnClickListener {
+            val bundle = Bundle().apply { putString("statusId", "status_123") }
+            findNavController().navigate(R.id.action_detail_to_enrollment, bundle)
         }
     }
 

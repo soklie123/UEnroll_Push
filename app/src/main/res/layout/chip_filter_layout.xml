@@ -1,6 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- This is a simple template. The style is applied by the ChipGroup in the main layout. -->
+
 <com.google.android.material.chip.Chip
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content" />
+    android:layout_height="wrap_content"
+
+    style="@style/Widget.UniGO.Chip"
+
+    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+    android:textColor="@color/chip_text_selector"
+    app:chipBackgroundColor="@color/chip_bg_selector"
+    app:chipStrokeColor="@color/faculty_text_selector"
+    app:chipStrokeWidth="0dp"
+    />

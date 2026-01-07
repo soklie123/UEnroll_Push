@@ -7,5 +7,8 @@ data class NotificationItem(
 )
 
 enum class NotificationType {
-    INFO, ALERT
+    INFO,
+    ALERT,
+    UPDATE,
+    MESSAGE
 }

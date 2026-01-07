@@ -82,9 +82,11 @@ class HomeScreenFragment : Fragment() {
             if (findNavController().currentDestination?.id == R.id.homeScreenFragment) {
                 val bundle = Bundle().apply {
                     putString("departmentId", department.id)
+                    putString("facultyId", department.facultyId)
                 }
 
                 findNavController().navigate(R.id.action_home_to_detail, bundle)
+                android.util.Log.d("Navigation", "✓ Navigation successful!")
             }
         } catch (e: Exception) {
             android.util.Log.e("NavError", "Navigation failed: ${e.message}")
