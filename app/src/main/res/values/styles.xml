@@ -115,5 +115,4 @@
         <item name="android:tint">@color/background_gray_dark</item>
 
     </style>
-
 </resources>

@@ -1,10 +1,13 @@
 package com.example.student_enrollment_app
 
 import android.content.Intent
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import androidx.core.view.isVisible
 import com.example.student_enrollment_app.auth.SignInActivity
 import com.example.student_enrollment_app.databinding.ActivitySplashBinding
@@ -20,6 +23,9 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        setupEdgeToEdge()
 
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -40,6 +46,14 @@ class SplashActivity : AppCompatActivity() {
         coroutineScope.launch {
             delay(splashDuration)
             checkUserSession()
+        }
+    }
+
+    private fun setupEdgeToEdge() {
+        window.statusBarColor = Color.TRANSPARENT
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            window.navigationBarColor = Color.parseColor("#F2FFFFFF")
+            WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightNavigationBars = true
         }
     }
 

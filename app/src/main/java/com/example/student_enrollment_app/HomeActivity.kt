@@ -11,7 +11,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
@@ -19,12 +18,10 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.student_enrollment_app.auth.SignInActivity
 import com.example.student_enrollment_app.databinding.ActivityHomeBinding
-import com.example.student_enrollment_app.model.Department
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.messaging.FirebaseMessaging
 
 class HomeActivity : AppCompatActivity() {
@@ -71,8 +68,6 @@ class HomeActivity : AppCompatActivity() {
         requestNotificationPermission()
         handleNotificationIntent(intent)
 
-        // Start Firestore listener for new departments
-        listenForNewDepartments()
     }
 
     private fun setupEdgeToEdge() {
@@ -172,53 +167,5 @@ class HomeActivity : AppCompatActivity() {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
-    // ------------------- Firestore real-time listener -------------------
-    private fun listenForNewDepartments() {
-        val db = FirebaseFirestore.getInstance()
-        val faculties = listOf("engineering", "science", "education") // list your faculty IDs here
 
-        for (facultyId in faculties) {
-            db.collection("faculties")
-                .document(facultyId)
-                .collection("departments")
-                .addSnapshotListener { snapshots, error ->
-                    if (error != null) {
-                        Log.w("FirestoreListener", "Listen failed", error)
-                        return@addSnapshotListener
-                    }
-
-                    snapshots?.documentChanges?.forEach { docChange ->
-                        if (docChange.type == DocumentChange.Type.ADDED) {
-                            val newDept = docChange.document.toObject(Department::class.java)
-                            Log.d("FirestoreListener", "New department added: ${newDept.name}")
-
-                            showLocalNotification(
-                                "New Department Added",
-                                "Department ${newDept.name} is now available"
-                            )
-                        }
-                    }
-                }
-        }
-    }
-
-    private fun showLocalNotification(title: String, message: String) {
-        val channelId = "admin_updates"
-        val notificationId = (System.currentTimeMillis() / 1000).toInt()
-        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as android.app.NotificationManager
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = android.app.NotificationChannel(channelId, "Admin Updates", android.app.NotificationManager.IMPORTANCE_HIGH)
-            notificationManager.createNotificationChannel(channel)
-        }
-
-        val notification = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.drawable.ic_notification) // Replace with your icon
-            .setContentTitle(title)
-            .setContentText(message)
-            .setAutoCancel(true)
-            .build()
-
-        notificationManager.notify(notificationId, notification)
-    }
 }

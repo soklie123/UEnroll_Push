@@ -25,8 +25,30 @@
     <color name="chip_text">#1A237E</color>
     <color name="chip_stroke">#BBDEFB</color>
     <color name="blue_sky_light">#BBDEFB</color>
-    <color name="primary">#1A237E</color>
     <color name="chip_border">#1976D2</color>
     <color name="gray">#C2CAD8</color>
+
+
+    <!-- Primary Colors -->
+    <color name="primary">#1E40AF</color>
+    <color name="primary_dark">#1E3A8A</color>
+    <color name="primary_light">#3B82F6</color>
+
+    <!-- Background Colors -->
+    <color name="background">#F8FAFC</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="input_background">#F1F5F9</color>
+    <color name="upload_card_background">#FAFAFA</color>
+
+    <!-- Text Colors -->
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#64748B</color>
+
+    <!-- Border & Divider Colors -->
+    <color name="upload_card_border">#E2E8F0</color>
+    <color name="progress_track">#E2E8F0</color>
+
+    <!-- Icon Tint -->
+    <color name="icon_tint">#64748B</color>
 
 </resources>

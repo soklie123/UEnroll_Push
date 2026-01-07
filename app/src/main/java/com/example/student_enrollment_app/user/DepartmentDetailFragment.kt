@@ -1,9 +1,9 @@
 package com.example.student_enrollment_app.user
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -19,32 +19,47 @@ class DepartmentDetailFragment : Fragment(R.layout.fragment_department_detail) {
 
     private var currentDepartment: Department? = null
 
+    // --- START FIX: Add a flag to prevent double navigation ---
+    private var isNavigating = false
+    // --- END FIX ---
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentDepartmentDetailBinding.bind(view)
 
-        // Back button
+        binding.btnEnroll.isEnabled = false
+
         binding.btnBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
 
-        // Enroll button
         binding.btnEnroll.setOnClickListener {
+            // --- START FIX: Check the flag before navigating ---
+            if (isNavigating) return@setOnClickListener
+
             currentDepartment?.let { dept ->
+                // Set the flag to true immediately to block other clicks
+                isNavigating = true
+
                 val bundle = Bundle().apply {
-                    putString("facultyName", arguments?.getString("facultyName") ?: "")
-                    putString("departmentName", dept.name)
+                    putString("facultyName", arguments?.getString("facultyName") ?: "Unknown Faculty")
+                    putString("departmentName", dept.name ?: "Unknown Department")
                 }
 
-                findNavController().navigate(
-                    R.id.action_detail_to_enrollment,
-                    bundle
-                )
+                try {
+                    findNavController().navigate(R.id.action_detail_to_enrollment, bundle)
+                } catch (e: IllegalStateException) {
+                    // Log the error just in case, and reset the flag if navigation fails
+                    Log.e("DepartmentDetail", "Navigation failed", e)
+                    isNavigating = false
+                }
+
+            } ?: run {
+                Toast.makeText(requireContext(), "Department data not loaded yet!", Toast.LENGTH_SHORT).show()
             }
-            setupViewDetailButton()
+            // --- END FIX ---
         }
 
-        // Get arguments
         val departmentId = arguments?.getString("departmentId")
         val facultyId = arguments?.getString("facultyId")
 
@@ -52,24 +67,21 @@ class DepartmentDetailFragment : Fragment(R.layout.fragment_department_detail) {
             loadDepartmentDetails(facultyId, departmentId)
         } else {
             Log.e("DepartmentDetail", "departmentId is null!")
+            Toast.makeText(requireContext(), "Invalid department ID", Toast.LENGTH_SHORT).show()
         }
     }
-    private fun setupViewDetailButton() {
-        binding.btnEnroll.setOnClickListener {
-            val bundle = Bundle().apply { putString("statusId", "status_123") }
-            findNavController().navigate(R.id.action_detail_to_enrollment, bundle)
-        }
+
+    // --- START FIX: Reset the flag when the user returns to this screen ---
+    override fun onResume() {
+        super.onResume()
+        isNavigating = false
     }
+    // --- END FIX ---
 
     private fun loadDepartmentDetails(facultyId: String?, departmentId: String) {
         val db = FirebaseFirestore.getInstance()
+        val facultyFolders = if (facultyId != null) listOf(facultyId) else listOf("engineering", "science", "education")
         var isDataLoaded = false
-
-        val facultyFolders = if (facultyId != null) {
-            listOf(facultyId)
-        } else {
-            listOf("engineering", "science", "education")
-        }
 
         for (folder in facultyFolders) {
             if (isDataLoaded) break
@@ -83,20 +95,22 @@ class DepartmentDetailFragment : Fragment(R.layout.fragment_department_detail) {
                     if (document != null && document.exists() && isAdded) {
                         val dept = document.toObject(Department::class.java)
                         dept?.let {
+                            currentDepartment = it
                             isDataLoaded = true
+                            binding.btnEnroll.isEnabled = true
 
-                            // Set department info
-                            binding.txtDetailTitle.text = it.name
-                            binding.txtDescription.text = it.description
-                            binding.txtTuition.text = "$${it.tuition} per year"
-                            binding.txtDuration.text = it.duration
+                            binding.txtDetailTitle.text = it.name ?: "No Name"
+                            binding.txtDescription.text = it.description ?: "No Description"
+                            binding.txtTuition.text = "$${it.tuition ?: 0} per year"
+                            binding.txtDuration.text = it.duration ?: "Unknown"
 
-                            // Load department logo
                             if (!it.logoUrl.isNullOrEmpty()) {
                                 Glide.with(requireContext())
                                     .load(it.logoUrl)
                                     .placeholder(R.drawable.ic_placeholder)
                                     .into(binding.imgDetailLogo)
+                            } else {
+                                binding.imgDetailLogo.setImageResource(R.drawable.ic_placeholder)
                             }
                         }
                     }

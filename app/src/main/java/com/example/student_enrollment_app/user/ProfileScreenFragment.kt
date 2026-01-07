@@ -18,11 +18,13 @@ class ProfileScreenFragment : Fragment() {
 
     private var _binding: FragmentProfileScreenBinding? = null
     private val binding get() = _binding!!
+
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentProfileScreenBinding.inflate(inflater, container, false)
@@ -35,9 +37,10 @@ class ProfileScreenFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
+        // Always load fresh data
         loadUserProfile()
 
-        // Handle Logout
+        // Logout
         binding.btnLogoutAction.setOnClickListener {
             auth.signOut()
             val intent = Intent(requireContext(), SignInActivity::class.java)
@@ -49,31 +52,33 @@ class ProfileScreenFragment : Fragment() {
     private fun loadUserProfile() {
         val uid = auth.currentUser?.uid ?: return
 
-        db.collection("users").document(uid).get()
+        db.collection("users")
+            .document(uid)
+            .get()
             .addOnSuccessListener { document ->
-                // This converts the Firestore document into your Kotlin User object
                 val user = document.toObject<User>()
-
-                if (user != null) {
-                    // Use the data from Firestore, not just Auth
-                    binding.userName.text = user.fullName
-                    binding.tvDisplayEmail.text = user.email
-
-                    // Set the ID display
-                    val uniqueCode = user.uid.take(6).uppercase()
-                    binding.userId.text = "ID: STU-2025-$uniqueCode"
-
-                    // Check for department
-                    if (user.enrolledDepartmentId != null) {
-                        binding.tvDisplayDepartment.text = user.enrolledDepartmentId
-                    } else {
-                        binding.tvDisplayDepartment.text = "Not Enrolled"
-                    }
+                user?.let {
+                    bindUser(it)
                 }
             }
             .addOnFailureListener { e ->
-                Toast.makeText(context, "Error fetching profile: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Failed to load profile: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
+    }
+
+    private fun bindUser(user: User) {
+        binding.userName.text = user.fullName
+        binding.tvDisplayEmail.text = user.email
+
+        val uniqueCode = user.uid.take(6).uppercase()
+        binding.userId.text = "ID: STU-2026-$uniqueCode"
+
+        binding.tvDisplayDepartment.text =
+            user.enrolledDepartmentId ?: "Not Enrolled"
     }
 
     override fun onDestroyView() {

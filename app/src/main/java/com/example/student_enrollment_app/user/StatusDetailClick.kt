@@ -18,10 +18,10 @@ class StatusDetailClick : Fragment(R.layout.fragment_status_detail_click) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentStatusDetailClickBinding.bind(view)
 
-        // ✅ Show ActionBar (top bar)
+        // Show ActionBar (top bar)
         (requireActivity() as AppCompatActivity).supportActionBar?.show()
 
-        // ✅ Optional: make fragment content NOT fullscreen
+        // make fragment content NOT fullscreen
         setupEdgeToEdge(false)
 
         // Back button

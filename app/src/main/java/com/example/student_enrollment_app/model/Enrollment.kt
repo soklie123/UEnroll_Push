@@ -15,5 +15,6 @@ data class Enrollment(
     val photoUrl: String = "",
     val timestamp: Long = 0L,
     val status: String = "Pending",
-    val confirmationNumber: String = ""
+    val confirmationNumber: String = "",
+
 )
