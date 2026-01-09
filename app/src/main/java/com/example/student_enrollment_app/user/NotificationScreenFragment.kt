@@ -10,7 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.student_enrollment_app.R
 import com.example.student_enrollment_app.databinding.FragmentNotificationScreenBinding
 import com.example.student_enrollment_app.utils.NotificationEventManager
 import com.google.firebase.auth.FirebaseAuth
@@ -47,8 +49,21 @@ class NotificationScreenFragment : Fragment() {
 
     private fun setupRecyclerView() {
         adapter = NotificationAdapter(notifications) { notificationItem ->
-            // Optional: handle notification click
-            Log.d("NotificationFragment", "Clicked: ${notificationItem.title}")
+            val invoiceId = notificationItem.invoiceId
+
+            if (invoiceId.isNullOrEmpty()) {
+                Log.w("NotificationFragment", "No invoice linked to notification")
+                return@NotificationAdapter
+            }
+
+            val bundle = Bundle().apply {
+                putString("invoiceId", invoiceId)
+            }
+
+            findNavController().navigate(
+                R.id.action_notification_to_invoice,
+                bundle
+            )
         }
         binding.recyclerViewNotifications.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewNotifications.adapter = adapter
@@ -75,13 +90,16 @@ class NotificationScreenFragment : Fragment() {
                     val body = doc.getString("body") ?: ""
                     val type = doc.getString("type") ?: "info"
                     val timestamp = doc.getTimestamp("timestamp")
+                    val invoiceId = doc.getString("invoiceId")
+
 
                     val notificationItem = NotificationItem(
                         id = doc.id,
                         title = title,
                         message = body,
                         timestamp = formatTimestamp(timestamp),
-                        type = getNotificationType(type)
+                        type = getNotificationType(type),
+                        invoiceId = invoiceId
                     )
 
                     when (docChange.type) {
@@ -121,7 +139,8 @@ class NotificationScreenFragment : Fragment() {
                         title = event.title,
                         message = event.message,
                         timestamp = "Just now",
-                        type = getNotificationType(event.type)
+                        type = getNotificationType(event.type),
+                        invoiceId = event.invoiceId,
                     )
                 )
                 adapter.notifyItemInserted(0)

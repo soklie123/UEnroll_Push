@@ -6,7 +6,8 @@ import kotlinx.coroutines.flow.asSharedFlow
 data class NotificationEvent(
     val title: String,
     val message: String,
-    val type: String = "notification"
+    val type: String = "notification",
+    val invoiceId: String? = null
 )
 
 object NotificationEventManager {

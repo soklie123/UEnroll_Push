@@ -108,9 +108,8 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
-        android:layout_height="85dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/nav_glass_bg"
-        android:paddingTop="8dp"
         app:elevation="30dp"
         app:itemIconSize="26dp"
         app:itemIconTint="@color/nav_item_color"

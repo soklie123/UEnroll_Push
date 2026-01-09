@@ -69,13 +69,32 @@ class ProfileScreenFragment : Fragment() {
     }
 
     private fun navigateToInvoice() {
-        try {
-            findNavController().navigate(R.id.action_profile_to_invoice)
-        } catch (e: Exception) {
-            Log.e(TAG, "Navigation error: ${e.message}", e)
-            Toast.makeText(requireContext(), "Unable to open invoice", Toast.LENGTH_SHORT).show()
-        }
+        val userId = auth.currentUser?.uid ?: return
+
+        db.collection("users").document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                val invoiceId = document.getString("invoiceId")
+
+                if (invoiceId.isNullOrEmpty()) {
+                    Toast.makeText(requireContext(), "No invoice available", Toast.LENGTH_SHORT).show()
+                    return@addOnSuccessListener
+                }
+
+                val bundle = Bundle().apply {
+                    putString("invoiceId", invoiceId)
+                }
+
+                findNavController().navigate(
+                    R.id.action_profile_to_invoice,
+                    bundle
+                )
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "Failed to load invoice", Toast.LENGTH_SHORT).show()
+            }
     }
+
 
     private fun loadUserProfile() {
         val currentUser = auth.currentUser

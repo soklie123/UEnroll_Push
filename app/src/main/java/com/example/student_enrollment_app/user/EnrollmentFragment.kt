@@ -224,11 +224,10 @@ class EnrollmentFragment : Fragment() {
         department: String,
         confirmationNumber: String
     ) {
-        // Generate unique invoice number
         val invoiceNumber = generateInvoiceNumber()
 
         val invoice = Invoice(
-            invoiceId = "", // Will be set by Firestore
+            invoiceId = "", // will be updated after creation
             enrollmentId = enrollmentId,
             userId = userId,
             studentName = studentName,
@@ -238,32 +237,42 @@ class EnrollmentFragment : Fragment() {
             enrollmentDate = Timestamp.now(),
             invoiceNumber = invoiceNumber,
             confirmationNumber = confirmationNumber,
-            amount = 0.0, // Set to 0 or actual enrollment fee
+            amount = 0.0,
             status = "Issued",
             issueDate = Timestamp.now(),
             notes = "Enrollment confirmation for $department in Faculty of $faculty"
         )
 
-        // Save invoice to Firestore
         db.collection("invoices")
             .add(invoice)
             .addOnSuccessListener { invoiceDocRef ->
-                Log.d(TAG, "Invoice created: ${invoiceDocRef.id}")
 
-                // Update enrollment with invoice reference
+                val invoiceId = invoiceDocRef.id
+
+                // save invoiceId into invoice document
+                invoiceDocRef.update("invoiceId", invoiceId)
+
+                // link enrollment → invoice
                 db.collection("enrollments")
                     .document(enrollmentId)
-                    .update("invoiceId", invoiceDocRef.id)
+                    .update("invoiceId", invoiceId)
 
-                // Now update user profile and complete the process
-                updateUserDepartment(faculty, department, enrollmentId, invoiceNumber, confirmationNumber)
+                // continue flow with correct invoiceId
+                updateUserDepartment(
+                    faculty,
+                    department,
+                    enrollmentId,
+                    invoiceId,
+                    invoiceNumber,
+                    confirmationNumber
+                )
             }
             .addOnFailureListener { e ->
-                Log.e(TAG, "Failed to create invoice: ${e.message}", e)
-                // Continue with enrollment even if invoice fails
-                updateUserDepartment(faculty, department, enrollmentId, "", confirmationNumber)
+                Log.e(TAG, "Failed to create invoice", e)
+                handleError(e)
             }
     }
+
 
     private fun generateInvoiceNumber(): String {
         val timestamp = System.currentTimeMillis()
@@ -283,19 +292,18 @@ class EnrollmentFragment : Fragment() {
         faculty: String,
         department: String,
         enrollmentDocId: String,
+        invoiceId: String,
         invoiceNumber: String,
         confirmationNumber: String
     ) {
         val userId = auth.currentUser?.uid ?: return
 
-        Log.d(TAG, "Updating user department to: $department")
-
-        // Update the user's profile with the enrolled department
         val userUpdate = hashMapOf(
             "enrolledDepartmentId" to department,
             "enrolledFaculty" to faculty,
             "enrollmentTimestamp" to Timestamp.now(),
             "confirmationNumber" to confirmationNumber,
+            "invoiceId" to invoiceId,
             "invoiceNumber" to invoiceNumber
         )
 
@@ -303,54 +311,74 @@ class EnrollmentFragment : Fragment() {
             .document(userId)
             .set(userUpdate, SetOptions.merge())
             .addOnSuccessListener {
-                Log.d(TAG, "User department updated successfully")
-                handleSuccess(faculty, department, enrollmentDocId, invoiceNumber, confirmationNumber)
+                handleSuccess(
+                    faculty,
+                    department,
+                    enrollmentDocId,
+                    invoiceId,
+                    invoiceNumber,
+                    confirmationNumber
+                )
             }
-            .addOnFailureListener { e ->
-                Log.e(TAG, "Failed to update user department: ${e.message}", e)
-                handleSuccess(faculty, department, enrollmentDocId, invoiceNumber, confirmationNumber)
+            .addOnFailureListener {
+                // even if user update fails, still continue
+                handleSuccess(
+                    faculty,
+                    department,
+                    enrollmentDocId,
+                    invoiceId,
+                    invoiceNumber,
+                    confirmationNumber
+                )
             }
     }
+
 
     private fun handleSuccess(
         faculty: String,
         department: String,
-        docId: String,
+        enrollmentId: String,
+        invoiceId: String,
         invoiceNumber: String,
         confirmationNumber: String
     ) {
         val title = "Enrollment Successful!"
         val body = """
-            Your enrollment has been confirmed!
-            
-            Department: $department
-            Faculty: $faculty
-            Confirmation: $confirmationNumber
-            Invoice: $invoiceNumber
-            
-            Your invoice has been generated and is available in your notifications.
-        """.trimIndent()
+        Your enrollment has been confirmed!
 
-        saveNotificationToFirestore(title, body, "success")
+        Faculty: $faculty
+        Department: $department
+        Confirmation: $confirmationNumber
+        Invoice: $invoiceNumber
+    """.trimIndent()
+
+        saveNotificationToFirestore(
+            title,
+            body,
+            "info",
+            invoiceId
+        )
 
         NotificationHelper.showEnrollmentNotification(
             requireContext(),
             title,
-            "Confirmation #$confirmationNumber - Invoice #$invoiceNumber",
-            docId
+            "Invoice #$invoiceNumber",
+            enrollmentId
         )
 
-        showToast("Enrollment Successful! Viewing your invoice...")
+        showToast("Enrollment Successful!")
 
-        // Navigate to invoice detail screen
+        //  Navigate with invoiceId
         val bundle = Bundle().apply {
-            putString("invoiceId", null) // null = load latest invoice for user
+            putString("invoiceId", invoiceId)
         }
+
         findNavController().navigate(
             R.id.action_enrollment_to_invoice,
             bundle
         )
     }
+
 
     private fun handleError(e: Exception) {
         Log.e(TAG, "Error saving enrollment", e)
@@ -364,7 +392,8 @@ class EnrollmentFragment : Fragment() {
     private fun saveNotificationToFirestore(
         title: String,
         body: String,
-        type: String
+        type: String,
+        invoiceId: String
     ) {
         val userId = auth.currentUser?.uid ?: return
 
@@ -372,6 +401,7 @@ class EnrollmentFragment : Fragment() {
             "title" to title,
             "body" to body,
             "type" to type,
+            "invoiceId" to invoiceId,
             "timestamp" to Timestamp.now(),
             "read" to false
         )
