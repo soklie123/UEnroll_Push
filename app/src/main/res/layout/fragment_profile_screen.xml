@@ -186,16 +186,38 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
+                <!-- View Invoice Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnViewInvoice"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="16dp"
+                    android:text="View My Invoice"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    app:backgroundTint="#1A237E"
+                    app:cornerRadius="12dp"
+                    app:icon="@drawable/ic_invoice"
+                    app:iconGravity="textStart"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/user_info_card" />
+
+                <!-- Logout Card -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/logout_card"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="16dp"
                     app:cardBackgroundColor="#FFF8F8"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="0dp"
-                    app:layout_constraintTop_toBottomOf="@id/user_info_card"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/btnViewInvoice"
                     app:strokeColor="#FFDADA"
                     app:strokeWidth="1dp">
 
@@ -228,7 +250,7 @@
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:src="@drawable/ic_arrow_forward"
+                            android:src="@drawable/ic_next_chip"
                             app:tint="#FF5252" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>

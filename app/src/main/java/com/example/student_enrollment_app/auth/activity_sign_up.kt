@@ -10,24 +10,21 @@ import com.example.student_enrollment_app.HomeActivity
 import com.example.student_enrollment_app.databinding.ActivitySignUpBinding
 import com.example.student_enrollment_app.model.User
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 
 class SignUpActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignUpBinding
     private lateinit var auth: FirebaseAuth
-    private lateinit var db: FirebaseFirestore // Add this
+    private lateinit var db: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        auth = Firebase.auth
-        db = Firebase.firestore // Initialize Firestore
+        auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
 
         setupClickListeners()
     }
@@ -45,7 +42,6 @@ class SignUpActivity : AppCompatActivity() {
         }
 
         binding.tvSignInRedirect.setOnClickListener {
-            // Ensure SignInActivity exists in your auth package
             startActivity(Intent(this, SignInActivity::class.java))
             finish()
         }
@@ -57,11 +53,7 @@ class SignUpActivity : AppCompatActivity() {
             binding.etFullName.error = "Full name is required"
             return false
         }
-        if (email.isEmpty()) {
-            binding.etEmailSignUp.error = "Email is required"
-            return false
-        }
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             binding.etEmailSignUp.error = "Enter a valid email"
             return false
         }
@@ -84,22 +76,20 @@ class SignUpActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     val uid = auth.currentUser?.uid ?: ""
 
-                    // Use your Model
+                    // Save new user to Firestore
                     val user = User(
                         uid = uid,
                         fullName = fullName,
                         email = email,
-                        profilePic = "",
-                        enrolledDepartmentId = null
+                        enrolledDepartmentId = null,
+                        profileImageUrl = null // Use null instead of profilePic
                     )
 
-                    // Save to Firestore using the initialized 'db'
                     db.collection("users").document(uid).set(user)
                         .addOnSuccessListener {
                             showLoading(false)
                             Toast.makeText(this, "Account created!", Toast.LENGTH_SHORT).show()
-                            startActivity(Intent(this, HomeActivity::class.java))
-                            finish()
+                            navigateToHome()
                         }
                         .addOnFailureListener { e ->
                             showLoading(false)
@@ -112,8 +102,15 @@ class SignUpActivity : AppCompatActivity() {
             }
     }
 
+    private fun navigateToHome() {
+        val intent = Intent(this, HomeActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
+    }
+
     private fun showLoading(show: Boolean) {
         binding.progressBarSignUp.visibility = if (show) View.VISIBLE else View.GONE
-        binding.btnSignUp.visibility = if (show) View.INVISIBLE else View.VISIBLE
+        binding.btnSignUp.isEnabled = !show
     }
 }

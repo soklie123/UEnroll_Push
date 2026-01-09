@@ -13,15 +13,11 @@ import com.example.student_enrollment_app.model.Department
 import com.google.firebase.firestore.FirebaseFirestore
 
 class DepartmentDetailFragment : Fragment(R.layout.fragment_department_detail) {
-
     private var _binding: FragmentDepartmentDetailBinding? = null
     private val binding get() = _binding!!
-
     private var currentDepartment: Department? = null
-
-    // --- START FIX: Add a flag to prevent double navigation ---
+    private var currentFacultyName: String = "Unknown Faculty"
     private var isNavigating = false
-    // --- END FIX ---
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -42,7 +38,7 @@ class DepartmentDetailFragment : Fragment(R.layout.fragment_department_detail) {
                 isNavigating = true
 
                 val bundle = Bundle().apply {
-                    putString("facultyName", arguments?.getString("facultyName") ?: "Unknown Faculty")
+                    putString("facultyName", currentFacultyName)
                     putString("departmentName", dept.name ?: "Unknown Department")
                 }
 
@@ -63,12 +59,28 @@ class DepartmentDetailFragment : Fragment(R.layout.fragment_department_detail) {
         val departmentId = arguments?.getString("departmentId")
         val facultyId = arguments?.getString("facultyId")
 
-        if (departmentId != null) {
+        if (departmentId != null && facultyId != null) {
+            loadFacultyName(facultyId)
             loadDepartmentDetails(facultyId, departmentId)
         } else {
             Log.e("DepartmentDetail", "departmentId is null!")
             Toast.makeText(requireContext(), "Invalid department ID", Toast.LENGTH_SHORT).show()
         }
+    }
+    private fun loadFacultyName(facultyId: String) {
+        val db = FirebaseFirestore.getInstance()
+
+        db.collection("faculties")
+            .document(facultyId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document != null && document.exists()) {
+                    currentFacultyName = document.getString("name") ?: "Unknown Faculty"
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("DepartmentDetail", "Error loading faculty name", e)
+            }
     }
 
     // --- START FIX: Reset the flag when the user returns to this screen ---

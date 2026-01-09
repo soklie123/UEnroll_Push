@@ -1,8 +1,6 @@
 package com.example.student_enrollment_app.user
 
-import android.graphics.Color
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,33 +8,50 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.student_enrollment_app.R
 import com.example.student_enrollment_app.databinding.FragmentEnrollmentBinding
+import com.example.student_enrollment_app.databinding.ViewUploadItemSmallBinding
 import com.example.student_enrollment_app.model.Enrollment
+import com.example.student_enrollment_app.model.Invoice
 import com.example.student_enrollment_app.utils.NotificationHelper
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
+import java.text.SimpleDateFormat
+import java.util.*
 
 class EnrollmentFragment : Fragment() {
+
     private var _binding: FragmentEnrollmentBinding? = null
     private val binding get() = _binding!!
+
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
     private val storage = FirebaseStorage.getInstance().reference
+
     private var idCardUri: Uri? = null
     private var photoUri: Uri? = null
+
     private var currentUploadType = ""
 
-    private val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        uri?.let { handleSelectedFile(it) }
+    companion object {
+        private const val TAG = "EnrollmentFragment"
+        private const val UPLOAD_ID = "ID"
+        private const val UPLOAD_PHOTO = "PHOTO"
     }
+
+    private val getContent =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let { handleSelectedFile(it) }
+        }
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentEnrollmentBinding.inflate(inflater, container, false)
@@ -46,31 +61,14 @@ class EnrollmentFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupEdgeToEdge()
-
         NotificationHelper.createNotificationChannel(requireContext())
 
         setupDisplayData()
-        setupClickListeners()
         setupDocumentLabels()
-    }
-    private fun setupEdgeToEdge() {
-        activity?.window?.let { window ->
-            // Tell system we will handle insets ourselves
-            WindowCompat.setDecorFitsSystemWindows(window, false)
-
-            // Transparent status bar
-            window.statusBarColor = Color.TRANSPARENT
-
-            // Transparent navigation bar + light icons
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                window.navigationBarColor = Color.parseColor("#F2FFFFFF")
-                WindowCompat.getInsetsController(window, window.decorView)
-                    ?.isAppearanceLightNavigationBars = true
-            }
-        }
+        setupClickListeners()
     }
 
+    // ---------------- CLICK LISTENERS ----------------
 
     private fun setupClickListeners() {
         binding.btnBack.setOnClickListener {
@@ -78,118 +76,299 @@ class EnrollmentFragment : Fragment() {
         }
 
         binding.cardIdUpload.root.setOnClickListener {
-            currentUploadType = "ID"
+            currentUploadType = UPLOAD_ID
             getContent.launch("image/*")
         }
 
         binding.cardPhotoUpload.root.setOnClickListener {
-            currentUploadType = "PHOTO"
+            currentUploadType = UPLOAD_PHOTO
             getContent.launch("image/*")
         }
 
-        binding.btnSubmitAnswer.setOnClickListener { validateAndUpload() }
+        binding.btnSubmitAnswer.setOnClickListener {
+            validateAndUpload()
+        }
     }
+
+    // ---------------- DOCUMENT HANDLING ----------------
+
     private fun handleSelectedFile(uri: Uri) {
         when (currentUploadType) {
-            "ID" -> {
+            UPLOAD_ID -> {
                 idCardUri = uri
                 updateUploadUI(binding.cardIdUpload, "ID Card Selected")
             }
-            "PHOTO" -> {
+            UPLOAD_PHOTO -> {
                 photoUri = uri
                 updateUploadUI(binding.cardPhotoUpload, "Photo Added")
             }
         }
     }
 
-    private fun updateUploadUI(uploadItemBinding: com.example.student_enrollment_app.databinding.ViewUploadItemSmallBinding, status: String) {
-        uploadItemBinding.txtDocLabel.text = status
-        uploadItemBinding.txtDocLabel.setTextColor(requireContext().getColor(R.color.success_green))
-        uploadItemBinding.imgIcon.setImageResource(R.drawable.ic_check)
-        uploadItemBinding.imgIcon.setColorFilter(requireContext().getColor(R.color.success_green))
+    private fun updateUploadUI(
+        uploadItem: ViewUploadItemSmallBinding,
+        status: String
+    ) {
+        uploadItem.txtDocLabel.text = status
+        uploadItem.txtDocLabel.setTextColor(
+            requireContext().getColor(R.color.success_green)
+        )
+
+        uploadItem.imgIcon.setImageResource(R.drawable.ic_check)
+        uploadItem.imgIcon.setColorFilter(
+            requireContext().getColor(R.color.success_green)
+        )
     }
 
     private fun setupDocumentLabels() {
         binding.cardIdUpload.txtDocLabel.text = "ID Card"
+        binding.cardIdUpload.img.setImageResource(R.drawable.ic_id_card)
+
         binding.cardPhotoUpload.txtDocLabel.text = "Personal Photo"
+        binding.cardPhotoUpload.img.setImageResource(R.drawable.ic_photo)
     }
 
+    // ---------------- DISPLAY DATA ----------------
+
     private fun setupDisplayData() {
-        val facultyName = arguments?.getString("facultyName") ?: "Faculty"
-        val departmentName = arguments?.getString("departmentName") ?: "Department"
+        val args = requireArguments()
+        val facultyName = args.getString("facultyName")
+            ?: throw IllegalStateException("facultyName missing")
+        val departmentName = args.getString("departmentName")
+            ?: throw IllegalStateException("departmentName missing")
 
         binding.txtSelectedFaculty.text = "Faculty of $facultyName"
         binding.txtSelectedMajor.text = "Major: $departmentName"
     }
+
+    // ---------------- VALIDATION ----------------
 
     private fun validateAndUpload() {
         val fName = binding.edtFirstName.text.toString().trim()
         val lName = binding.edtLastName.text.toString().trim()
         val email = binding.edtEmail.text.toString().trim()
 
-        if (fName.isEmpty() || lName.isEmpty() || email.isEmpty()) {
-            showToast("Please fill in all personal details")
-            return
-        }
-        if (idCardUri == null || photoUri == null) {
-            showToast("Please upload both documents")
-            return
-        }
+        when {
+            fName.isEmpty() || lName.isEmpty() || email.isEmpty() ->
+                showToast("Please fill in all personal details")
 
-        binding.btnSubmitAnswer.isEnabled = false
-        binding.btnSubmitAnswer.text = "Saving..."
+            idCardUri == null || photoUri == null ->
+                showToast("Please upload both documents")
 
-        saveToFirestore(fName, lName, email, "placeholder", "placeholder")
+            else -> {
+                binding.btnSubmitAnswer.isEnabled = false
+                binding.btnSubmitAnswer.text = "Saving..."
+                saveToFirestore(fName, lName, email)
+            }
+        }
     }
 
-    private fun saveToFirestore(fName: String, lName: String, email: String, idUrl: String?, photoUrl: String?) {
+    // ---------------- FIRESTORE ----------------
+
+    private fun saveToFirestore(
+        fName: String,
+        lName: String,
+        email: String
+    ) {
         val userId = auth.currentUser?.uid ?: return
-        val facultyName = arguments?.getString("facultyName") ?: "Unknown"
-        val departmentName = arguments?.getString("departmentName") ?: "Unknown"
+        val args = requireArguments()
+
+        val facultyName = args.getString("facultyName")!!
+        val departmentName = args.getString("departmentName")!!
+
+        // Generate unique confirmation number
+        val confirmationNumber = generateConfirmationNumber()
 
         val enrollment = Enrollment(
-            userId = userId, firstName = fName, lastName = lName, email = email,
-            faculty = facultyName, major = departmentName,
-            idCardUrl = idUrl ?: "", photoUrl = photoUrl ?: "",
-            transcriptUrl = "", timestamp = System.currentTimeMillis(),
+            userId = userId,
+            firstName = fName,
+            lastName = lName,
+            email = email,
+            faculty = facultyName,
+            major = departmentName,
+            idCardUrl = "",
+            photoUrl = "",
+            transcriptUrl = "",
+            timestamp = System.currentTimeMillis(),
             status = "Pending",
-            confirmationNumber = ""
+            confirmationNumber = confirmationNumber
         )
 
-        db.collection("enrollments").add(enrollment)
+        db.collection("enrollments")
+            .add(enrollment)
             .addOnSuccessListener { docRef ->
-                Log.d("EnrollmentFragment", "Enrollment successful")
-
-                val title = "Enrollment Submitted Successfully! ✅"
-                val body = "Your enrollment for $facultyName - $departmentName has been submitted and is pending approval."
-
-                // ✅ 1. Save notification to Firestore (so it appears in NotificationScreenFragment)
-                saveNotificationToFirestore(title, body, "info")
-
-                // ✅ 2. Show system notification
-                NotificationHelper.showEnrollmentNotification(
-                    requireContext(),
-                    title,
-                    body,
-                    docRef.id
+                // Generate invoice after enrollment is saved
+                generateInvoice(
+                    enrollmentId = docRef.id,
+                    userId = userId,
+                    studentName = "$fName $lName",
+                    studentEmail = email,
+                    faculty = facultyName,
+                    department = departmentName,
+                    confirmationNumber = confirmationNumber
                 )
-
-                showToast("Enrollment Successful!")
-                findNavController().popBackStack()
             }
             .addOnFailureListener { e ->
-                Log.e("EnrollmentFragment", "Error saving enrollment", e)
-                showToast("Error: ${e.message}")
-                binding.btnSubmitAnswer.isEnabled = true
-                binding.btnSubmitAnswer.text = "Complete Application"
+                handleError(e)
             }
     }
 
-    // ✅ Save notification to Firestore so it appears in NotificationScreenFragment
-    private fun saveNotificationToFirestore(title: String, body: String, type: String) {
+    // ---------------- INVOICE GENERATION ----------------
+
+    private fun generateInvoice(
+        enrollmentId: String,
+        userId: String,
+        studentName: String,
+        studentEmail: String,
+        faculty: String,
+        department: String,
+        confirmationNumber: String
+    ) {
+        // Generate unique invoice number
+        val invoiceNumber = generateInvoiceNumber()
+
+        val invoice = Invoice(
+            invoiceId = "", // Will be set by Firestore
+            enrollmentId = enrollmentId,
+            userId = userId,
+            studentName = studentName,
+            studentEmail = studentEmail,
+            faculty = faculty,
+            department = department,
+            enrollmentDate = Timestamp.now(),
+            invoiceNumber = invoiceNumber,
+            confirmationNumber = confirmationNumber,
+            amount = 0.0, // Set to 0 or actual enrollment fee
+            status = "Issued",
+            issueDate = Timestamp.now(),
+            notes = "Enrollment confirmation for $department in Faculty of $faculty"
+        )
+
+        // Save invoice to Firestore
+        db.collection("invoices")
+            .add(invoice)
+            .addOnSuccessListener { invoiceDocRef ->
+                Log.d(TAG, "Invoice created: ${invoiceDocRef.id}")
+
+                // Update enrollment with invoice reference
+                db.collection("enrollments")
+                    .document(enrollmentId)
+                    .update("invoiceId", invoiceDocRef.id)
+
+                // Now update user profile and complete the process
+                updateUserDepartment(faculty, department, enrollmentId, invoiceNumber, confirmationNumber)
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Failed to create invoice: ${e.message}", e)
+                // Continue with enrollment even if invoice fails
+                updateUserDepartment(faculty, department, enrollmentId, "", confirmationNumber)
+            }
+    }
+
+    private fun generateInvoiceNumber(): String {
+        val timestamp = System.currentTimeMillis()
+        val random = (10000..99999).random()
+        val year = SimpleDateFormat("yyyy", Locale.getDefault()).format(Date())
+        return "INV-$year-$random"
+    }
+
+    private fun generateConfirmationNumber(): String {
+        val chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        return "CONF-${(1..8).map { chars.random() }.joinToString("")}"
+    }
+
+    // ---------------- USER PROFILE UPDATE ----------------
+
+    private fun updateUserDepartment(
+        faculty: String,
+        department: String,
+        enrollmentDocId: String,
+        invoiceNumber: String,
+        confirmationNumber: String
+    ) {
         val userId = auth.currentUser?.uid ?: return
 
-        val notificationData = hashMapOf(
+        Log.d(TAG, "Updating user department to: $department")
+
+        // Update the user's profile with the enrolled department
+        val userUpdate = hashMapOf(
+            "enrolledDepartmentId" to department,
+            "enrolledFaculty" to faculty,
+            "enrollmentTimestamp" to Timestamp.now(),
+            "confirmationNumber" to confirmationNumber,
+            "invoiceNumber" to invoiceNumber
+        )
+
+        db.collection("users")
+            .document(userId)
+            .set(userUpdate, SetOptions.merge())
+            .addOnSuccessListener {
+                Log.d(TAG, "User department updated successfully")
+                handleSuccess(faculty, department, enrollmentDocId, invoiceNumber, confirmationNumber)
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Failed to update user department: ${e.message}", e)
+                handleSuccess(faculty, department, enrollmentDocId, invoiceNumber, confirmationNumber)
+            }
+    }
+
+    private fun handleSuccess(
+        faculty: String,
+        department: String,
+        docId: String,
+        invoiceNumber: String,
+        confirmationNumber: String
+    ) {
+        val title = "Enrollment Successful!"
+        val body = """
+            Your enrollment has been confirmed!
+            
+            Department: $department
+            Faculty: $faculty
+            Confirmation: $confirmationNumber
+            Invoice: $invoiceNumber
+            
+            Your invoice has been generated and is available in your notifications.
+        """.trimIndent()
+
+        saveNotificationToFirestore(title, body, "success")
+
+        NotificationHelper.showEnrollmentNotification(
+            requireContext(),
+            title,
+            "Confirmation #$confirmationNumber - Invoice #$invoiceNumber",
+            docId
+        )
+
+        showToast("Enrollment Successful! Viewing your invoice...")
+
+        // Navigate to invoice detail screen
+        val bundle = Bundle().apply {
+            putString("invoiceId", null) // null = load latest invoice for user
+        }
+        findNavController().navigate(
+            R.id.action_enrollment_to_invoice,
+            bundle
+        )
+    }
+
+    private fun handleError(e: Exception) {
+        Log.e(TAG, "Error saving enrollment", e)
+        showToast("Error: ${e.message}")
+        binding.btnSubmitAnswer.isEnabled = true
+        binding.btnSubmitAnswer.text = "Complete Application"
+    }
+
+    // ---------------- NOTIFICATION ----------------
+
+    private fun saveNotificationToFirestore(
+        title: String,
+        body: String,
+        type: String
+    ) {
+        val userId = auth.currentUser?.uid ?: return
+
+        val data = hashMapOf(
             "title" to title,
             "body" to body,
             "type" to type,
@@ -200,14 +379,10 @@ class EnrollmentFragment : Fragment() {
         db.collection("users")
             .document(userId)
             .collection("notifications")
-            .add(notificationData)
-            .addOnSuccessListener {
-                Log.d("EnrollmentFragment", "Notification saved to Firestore")
-            }
-            .addOnFailureListener { e ->
-                Log.e("EnrollmentFragment", "Error saving notification", e)
-            }
+            .add(data)
     }
+
+    // ---------------- UTIL ----------------
 
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()

@@ -118,6 +118,17 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/rv_status_items" />
 
+                <!-- In fragment_status_detail_click.xml -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnViewInvoice"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="View Invoice"
+                    android:textAllCaps="false"
+                    app:icon="@drawable/ic_document"
+                    app:cornerRadius="12dp"
+                    android:visibility="gone" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 

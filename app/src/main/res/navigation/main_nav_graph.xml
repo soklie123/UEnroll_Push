@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
     app:startDestination="@id/homeScreenFragment">
+
     <!-- Home Fragment Click bind to detail-->
     <fragment
         android:id="@+id/homeScreenFragment"
@@ -17,6 +18,7 @@
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim" />
     </fragment>
+
     <!--  Home detail Fragment -->
     <fragment
         android:id="@+id/departmentDetailFragment"
@@ -35,6 +37,7 @@
             app:exitAnim="@anim/nav_default_exit_anim" />
     </fragment>
 
+    <!-- Enrollment Fragment -->
     <fragment
         android:id="@+id/enrollmentFragment"
         android:name="com.example.student_enrollment_app.user.EnrollmentFragment"
@@ -48,6 +51,29 @@
         <argument
             android:name="departmentName"
             app:argType="string" />
+
+        <!-- Navigate to Invoice after successful enrollment -->
+        <action
+            android:id="@+id/action_enrollment_to_invoice"
+            app:destination="@id/invoiceDetailFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popUpTo="@id/homeScreenFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <!-- Invoice Detail Fragment -->
+    <fragment
+        android:id="@+id/invoiceDetailFragment"
+        android:name="com.example.student_enrollment_app.user.InvoiceDetailFragment"
+        android:label="Invoice Details"
+        tools:layout="@layout/fragment_invoice_detail">
+
+        <argument
+            android:name="invoiceId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
 
     <!-- Status Detail Fragment -->
@@ -63,6 +89,13 @@
             app:destination="@id/statusDetailClick"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim" />
+
+        <!-- Navigate to Invoice from Status -->
+        <action
+            android:id="@+id/action_status_to_invoice"
+            app:destination="@id/invoiceDetailFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
     </fragment>
 
     <!-- Status Detail after click Fragment -->
@@ -71,25 +104,48 @@
         android:name="com.example.student_enrollment_app.user.StatusDetailClick"
         android:label="Status Detail"
         tools:layout="@layout/fragment_status_detail_click">
+
         <argument
             android:name="statusId"
             app:argType="string"
             android:defaultValue="" />
+
+        <!-- Navigate to Invoice from Status Detail -->
+        <action
+            android:id="@+id/action_status_detail_to_invoice"
+            app:destination="@id/invoiceDetailFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
     </fragment>
 
-    <!-- Status Notification Fragment -->
+    <!-- Notification Fragment -->
     <fragment
         android:id="@+id/notificationScreenFragment"
         android:name="com.example.student_enrollment_app.user.NotificationScreenFragment"
         android:label="Notification"
-        tools:layout="@layout/fragment_notification_screen" />
-    <!-- Status Profile Fragment -->
+        tools:layout="@layout/fragment_notification_screen">
+
+        <!-- Navigate to Invoice from Notification -->
+        <action
+            android:id="@+id/action_notification_to_invoice"
+            app:destination="@id/invoiceDetailFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+    </fragment>
+
+    <!-- Profile Fragment -->
     <fragment
         android:id="@+id/profileScreenFragment"
         android:name="com.example.student_enrollment_app.user.ProfileScreenFragment"
         android:label="Profile"
-        tools:layout="@layout/fragment_profile_screen" />
+        tools:layout="@layout/fragment_profile_screen">
 
-
+        <!-- Navigate to Invoice from Profile -->
+        <action
+            android:id="@+id/action_profile_to_invoice"
+            app:destination="@id/invoiceDetailFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+    </fragment>
 
 </navigation>

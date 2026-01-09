@@ -72,13 +72,6 @@
             android:exported="false"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustResize" />
-
-        <!-- Enrollment -->
-        <activity
-            android:name=".ui.EnrollActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-
     </application>
 
 </manifest>

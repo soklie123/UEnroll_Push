@@ -106,7 +106,6 @@ class HomeScreenFragment : Fragment() {
         }
     }
 
-
     private fun loadUserData() {
         viewLifecycleOwner.lifecycleScope.launch {
             val user = userRepository.getCurrentUser()
