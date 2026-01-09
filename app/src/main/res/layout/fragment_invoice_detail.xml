@@ -34,7 +34,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Invoice Details"
+            android:text="@string/invoice_details"
             android:textColor="#1A237E"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -88,7 +88,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ENROLLMENT CONFIRMATION"
+                        android:text="@string/enrollment_confirmation"
                         android:textColor="#1A237E"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -110,7 +110,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Invoice Number"
+                            android:text="@string/invoice_number"
                             android:textColor="#74777F"
                             android:textSize="14sp" />
 
@@ -135,7 +135,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Confirmation"
+                            android:text="@string/confirmation"
                             android:textColor="#74777F"
                             android:textSize="14sp" />
 
@@ -160,7 +160,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Status"
+                            android:text="@string/status"
                             android:textColor="#74777F"
                             android:textSize="14sp" />
 
@@ -184,7 +184,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
-                        android:text="Student Information"
+                        android:text="@string/student_information"
                         android:textColor="#1A237E"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -246,7 +246,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
-                        android:text="Enrollment Details"
+                        android:text="@string/enrollment_details"
                         android:textColor="#1A237E"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -261,7 +261,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Faculty"
+                            android:text="@string/faculty"
                             android:textColor="#74777F"
                             android:textSize="14sp" />
 
@@ -284,7 +284,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Department"
+                            android:text="@string/department"
                             android:textColor="#74777F"
                             android:textSize="14sp" />
 
@@ -307,7 +307,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Enrollment Date"
+                            android:text="@string/enrollment_date"
                             android:textColor="#74777F"
                             android:textSize="14sp" />
 
@@ -329,7 +329,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Issue Date"
+                            android:text="@string/issue_date"
                             android:textColor="#74777F"
                             android:textSize="14sp" />
 
@@ -365,7 +365,7 @@
                 android:layout_height="56dp"
                 android:layout_marginTop="20dp"
                 android:backgroundTint="#1A237E"
-                android:text="Download Invoice PDF"
+                android:text="@string/download_invoice_pdf"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
@@ -379,7 +379,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:gravity="center"
-                android:text="Keep this invoice for your records"
+                android:text="@string/keep_this_invoice_for_your_records"
                 android:textColor="#74777F"
                 android:textSize="12sp" />
         </LinearLayout>

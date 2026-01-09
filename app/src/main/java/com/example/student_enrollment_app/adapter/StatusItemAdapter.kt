@@ -18,6 +18,7 @@ class StatusItemAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: StatusItem) {
+            // Title
             binding.tvStatusTitle.text = item.title
 
             // Subtitle (optional)
@@ -28,7 +29,7 @@ class StatusItemAdapter(
                 binding.tvStatusSubtitle.text = item.subtitle
             }
 
-            // Icon + color based on status
+            // Icon + color based on StatusType
             when (item.type) {
                 StatusType.COMPLETED -> {
                     binding.imgStatusIcon.setImageResource(R.drawable.ic_check_circle)
@@ -36,20 +37,34 @@ class StatusItemAdapter(
                         binding.root.context.getColor(R.color.green)
                     )
                 }
-
                 StatusType.PENDING -> {
                     binding.imgStatusIcon.setImageResource(R.drawable.ic_hourglass)
                     binding.imgStatusIcon.setColorFilter(
                         binding.root.context.getColor(R.color.warning_yellow)
                     )
                 }
-
                 StatusType.FAILED -> {
                     binding.imgStatusIcon.setImageResource(R.drawable.ic_close)
                     binding.imgStatusIcon.setColorFilter(
                         binding.root.context.getColor(R.color.orange)
                     )
                 }
+                // --- Start of FIX ---
+                // Add the missing branches for IN_PROGRESS and REJECTED.
+                // You can customize the icon and color as needed.
+                StatusType.IN_PROGRESS -> {
+                    binding.imgStatusIcon.setImageResource(R.drawable.ic_hourglass) // Or another appropriate icon
+                    binding.imgStatusIcon.setColorFilter(
+                        binding.root.context.getColor(R.color.warning_yellow) // Or another color
+                    )
+                }
+                StatusType.REJECTED -> {
+                    binding.imgStatusIcon.setImageResource(R.drawable.ic_close) // Or another appropriate icon
+                    binding.imgStatusIcon.setColorFilter(
+                        binding.root.context.getColor(R.color.orange) // Or another color
+                    )
+                }
+                // --- End of FIX ---
             }
         }
     }
@@ -69,7 +84,7 @@ class StatusItemAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    // New: update list dynamically
+    // Optional: update list dynamically
     fun updateList(newList: List<StatusItem>) {
         items = newList
         notifyDataSetChanged()

@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="20dp"
-        app:cardBackgroundColor="@android:color/white"
+        app:cardBackgroundColor="@color/background"
         app:cardCornerRadius="32dp"
         app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -56,8 +56,8 @@
                         android:scaleType="centerCrop"
                         android:src="@drawable/ic_profile_placeholder"
                         app:shapeAppearanceOverlay="@style/CircularImage"
-                        app:strokeColor="#3F84D4"
-                        app:strokeWidth="3dp" />
+                        app:strokeColor="#FFFFFF"
+                        app:strokeWidth="8dp" />
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/fab_edit_photo"
@@ -178,7 +178,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="end"
-                                android:text="Not Enrolled"
+                                android:text="@string/not_enrolled"
                                 android:textColor="#1A1C1E"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
@@ -193,7 +193,7 @@
                     android:layout_height="56dp"
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="16dp"
-                    android:text="View My Invoice"
+                    android:text="@string/view_my_invoice"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
                     android:textSize="16sp"
@@ -243,7 +243,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
                             android:layout_weight="1"
-                            android:text="Log out"
+                            android:text="@string/log_out"
                             android:textColor="#FF5252"
                             android:textStyle="bold" />
 

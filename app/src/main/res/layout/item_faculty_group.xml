@@ -33,7 +33,7 @@
                 android:id="@+id/tvDeptCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="3 Departments"
+                android:text="@string/_3_departments"
                 android:textColor="#FF5252"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"

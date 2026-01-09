@@ -60,7 +60,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:text="Department Name"
+                    android:text="@string/department_name"
                     android:textColor="#1A237E"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -82,7 +82,7 @@
                     android:background="@drawable/bg_price_tag"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="8dp"
-                    android:text="$000 per year"
+                    android:text="@string/_000_per_year"
                     android:textColor="#4CAF50"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -105,7 +105,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="About this program"
+                android:text="@string/about_this_program"
                 android:textColor="#1A237E"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -116,7 +116,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:lineSpacingExtra="6dp"
-                android:text="Loading program description..."
+                android:text="@string/loading_program_description"
                 android:textColor="#555555"
                 android:textSize="16sp" />
 

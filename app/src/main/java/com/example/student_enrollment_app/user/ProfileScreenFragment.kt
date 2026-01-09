@@ -1,11 +1,14 @@
 package com.example.student_enrollment_app.user
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -44,6 +47,11 @@ class ProfileScreenFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
+
+        val moreOptionsIcon: ImageView = view.findViewById(R.id.icon_more_options)
+        moreOptionsIcon.setOnClickListener { v ->
+            showOptionsMenu(v)
+        }
         // Hide edit photo button (can be enabled later if needed)
         binding.fabEditPhoto.visibility = View.GONE
 
@@ -56,11 +64,80 @@ class ProfileScreenFragment : Fragment() {
         loadUserProfile()
     }
 
+
+    private fun showOptionsMenu(view: View) {
+        val popup = PopupMenu(requireContext(), view)
+        popup.menuInflater.inflate(R.menu.profile_options_menu, popup.menu)
+
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.menu_language -> {
+                    // Handle language selection
+                    showLanguageDialog()
+                    true
+                }
+                R.id.menu_theme -> {
+                    // Handle theme selection
+                    showThemeDialog()
+                    true
+                }
+                else -> false
+            }
+        }
+
+        popup.show()
+    }
+
+    private fun showLanguageDialog() {
+        val languages = arrayOf("English", "Khmer")
+        AlertDialog.Builder(requireContext())
+            .setTitle("Select Language")
+            .setSingleChoiceItems(languages, -1) { dialog, which ->
+                // Save selection, e.g., in SharedPreferences
+                val selected = languages[which]
+                Toast.makeText(requireContext(), "Language: $selected", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun showThemeDialog() {
+        val themes = arrayOf("Light", "Dark", "System Default")
+        AlertDialog.Builder(requireContext())
+            .setTitle("Select Theme")
+            .setSingleChoiceItems(themes, -1) { dialog, which ->
+                val selected = themes[which]
+                Toast.makeText(requireContext(), "Theme: $selected", Toast.LENGTH_SHORT).show()
+                // Apply theme logic here
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
     private fun setupLogoutButton() {
         binding.btnLogoutAction.setOnClickListener {
-            auth.signOut()
-            Toast.makeText(requireContext(), "Logged out successfully", Toast.LENGTH_SHORT).show()
-            navigateToSignIn()
+            // Show confirmation dialog
+            val builder = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            builder.setTitle("Sign Out")
+            builder.setMessage("Are you sure you want to sign out?")
+
+            builder.setPositiveButton("OK") { dialog, _ ->
+                // User clicked OK, perform sign out
+                auth.signOut()
+                Toast.makeText(requireContext(), "Logged out successfully", Toast.LENGTH_SHORT).show()
+                navigateToSignIn()
+                dialog.dismiss()
+            }
+
+            builder.setNegativeButton("Cancel") { dialog, _ ->
+                // User clicked Cancel, dismiss dialog
+                dialog.dismiss()
+            }
+
+            val dialog = builder.create()
+            dialog.show()
         }
         // Setup View Invoice Button
         binding.btnViewInvoice.setOnClickListener {

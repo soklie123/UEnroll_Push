@@ -19,11 +19,12 @@ class SplashActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashBinding
     private val splashDuration = 2000L // 2 seconds
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+    private val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Edge-to-edge layout
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setupEdgeToEdge()
 
@@ -39,10 +40,10 @@ class SplashActivity : AppCompatActivity() {
         // Subscribe to FCM topic
         subscribeToFCMTopic()
 
-        // Optional: Get FCM token for debugging
+        // Log FCM token (optional)
         logFCMToken()
 
-        // Delay then check session
+        // Delay and check user session
         coroutineScope.launch {
             delay(splashDuration)
             checkUserSession()
@@ -59,13 +60,47 @@ class SplashActivity : AppCompatActivity() {
 
     private fun startSplashAnimation() {
         binding.llCenterBrand.isVisible = true
+
+        // Inside startSplashAnimation()
+        val loadingAnim = AnimationUtils.loadAnimation(this, R.anim.loading_text_anim)
+        binding.tvLoading.startAnimation(loadingAnim)
+
+
         try {
-            val animation = AnimationUtils.loadAnimation(this, R.anim.splash_anim)
-            binding.llCenterBrand.startAnimation(animation)
+            // Logo animation
+            val logoAnim = AnimationUtils.loadAnimation(this, R.anim.splash_anim)
+            binding.ivAppLogo.startAnimation(logoAnim)
+
+            // App name fade + slide animation
+            binding.tvAppName.animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setDuration(1000)
+                .setStartDelay(500)
+                .start()
+
+            // Loading text fade in
+            binding.tvLoading.animate()
+                .alpha(1f)
+                .setDuration(1000)
+                .setStartDelay(1200)
+                .start()
+
+            // Fade in whole brand container
+            binding.llCenterBrand.animate()
+                .alpha(1f)
+                .setDuration(1000)
+                .start()
+
         } catch (e: Exception) {
-            Log.e("SplashActivity", "Animation not found or failed", e)
+            Log.e("SplashActivity", "Animation failed", e)
+            // fallback simple fade in
+            binding.llCenterBrand.alpha = 1f
+            binding.tvAppName.alpha = 1f
+            binding.tvLoading.alpha = 1f
         }
     }
+
 
     private fun subscribeToFCMTopic() {
         FirebaseMessaging.getInstance().subscribeToTopic("all_users")
@@ -91,8 +126,12 @@ class SplashActivity : AppCompatActivity() {
     private fun checkUserSession() {
         val user = FirebaseAuth.getInstance().currentUser
         val nextActivity = if (user != null) HomeActivity::class.java else SignInActivity::class.java
-        startActivity(Intent(this, nextActivity))
-        finish()
+
+        // Optional: fade-out transition for smooth navigation
+        binding.root.animate().alpha(0f).setDuration(300).withEndAction {
+            startActivity(Intent(this, nextActivity))
+            finish()
+        }.start()
     }
 
     override fun onDestroy() {

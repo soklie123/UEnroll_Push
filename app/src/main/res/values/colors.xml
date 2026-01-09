@@ -29,6 +29,9 @@
     <color name="gray">#C2CAD8</color>
     <color name="icon">#9CA3AF</color>
 
+    <color name="status_rejected">#F44336</color>
+    <color name="border_light">#E0E0E0</color>
+
 
     <!-- Primary Colors -->
     <color name="primary">#1E40AF</color>
@@ -51,5 +54,5 @@
 
     <!-- Icon Tint -->
     <color name="icon_tint">#64748B</color>
-
+    <color name="ic_launcher_background">#FFFFFF</color>
 </resources>

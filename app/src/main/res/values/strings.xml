@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Student_Enrollment_App</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="welcome_sokly">Welcome Sokly! 👋</string>
     <string name="content_description_profile">content_description_profile</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -25,6 +24,62 @@
     <string name="enroll_now">Enroll Now</string>
     <string name="upload_remaining_documents">Upload Remaining Documents</string>
     <string name="required_documents">Required Documents:</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="login_here">Login Here</string>
+    <string name="welcome_back_you_ve_been_nmissed">Welcome back! You’ve been\nmissed!</string>
+    <string name="enter_email">Enter Email...</string>
+    <string name="enter_password">Enter password...</string>
+    <string name="forgot_password">Forgot password!</string>
+    <string name="login">Login</string>
+    <string name="create_new_account">Create new account</string>
+    <string name="or_continue_with">Or continue with</string>
+    <string name="sign_up_to_get_started">Sign up to get started</string>
+    <string name="full_name">Full Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="create_account">Create Account</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="sign_in">Sign In</string>
+    <string name="department_name">Department Name</string>
+    <string name="_000_per_year">$000 per year</string>
+    <string name="about_this_program">About this program</string>
+    <string name="loading_program_description">Loading program description...</string>
+    <string name="student_enrollment">Student Enrollment</string>
+    <string name="complete_personal_information">Complete Personal Information</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="document_upload">Document Upload</string>
+    <string name="submit_answer">Submit Answer</string>
+    <string name="invoice_details">Invoice Details</string>
+    <string name="enrollment_confirmation">ENROLLMENT CONFIRMATION</string>
+    <string name="invoice_number">Invoice Number</string>
+    <string name="confirmation">Confirmation</string>
+    <string name="status">Status</string>
+    <string name="student_information">Student Information</string>
+    <string name="enrollment_details">Enrollment Details</string>
+    <string name="faculty">Faculty</string>
+    <string name="department">Department</string>
+    <string name="enrollment_date">Enrollment Date</string>
+    <string name="issue_date">Issue Date</string>
+    <string name="download_invoice_pdf">Download Invoice PDF</string>
+    <string name="keep_this_invoice_for_your_records">Keep this invoice for your records</string>
+    <string name="notifications">Notifications</string>
+    <string name="no_notifications_yet">No notifications yet</string>
+    <string name="not_enrolled">Not Enrolled</string>
+    <string name="view_my_invoice">View My Invoice</string>
+    <string name="log_out">Log out</string>
+    <string name="if_you_have_any_questions_about_your_enrollment_status_contact_our_admission_office">If you have any questions about your enrollment status, contact our admission office.</string>
+    <string name="contact_support">Contact Support</string>
+    <string name="enrollment_status">Enrollment Status</string>
+    <string name="progress">Progress:</string>
+    <string name="view_invoice">View Invoice</string>
+    <string name="view_detail">View Detail</string>
+    <string name="step_1">Step 1</string>
+    <string name="major_selected">Major Selected</string>
+    <string name="completed">Completed</string>
+    <string name="you_ve_selected_information_technology_engineering">You\'ve selected Information Technology Engineering</string>
+    <string name="completed_on_nov_10_2025">Completed on Nov, 10 2025</string>
+    <string name="click_to_add">Click to add</string>
+    <string name="_3_departments">3 Departments</string>
 </resources>

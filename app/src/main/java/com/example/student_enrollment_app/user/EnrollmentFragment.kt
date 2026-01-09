@@ -109,6 +109,7 @@ class EnrollmentFragment : Fragment() {
         uploadItem: ViewUploadItemSmallBinding,
         status: String
     ) {
+        if (!isAdded) return
         uploadItem.txtDocLabel.text = status
         uploadItem.txtDocLabel.setTextColor(
             requireContext().getColor(R.color.success_green)
@@ -342,6 +343,10 @@ class EnrollmentFragment : Fragment() {
         invoiceNumber: String,
         confirmationNumber: String
     ) {
+        if (!isAdded || _binding == null) {
+            Log.w(TAG, "handleSuccess called but fragment view is gone. Aborting navigation.")
+            return
+        }
         val title = "Enrollment Successful!"
         val body = """
         Your enrollment has been confirmed!
@@ -381,6 +386,12 @@ class EnrollmentFragment : Fragment() {
 
 
     private fun handleError(e: Exception) {
+
+        if (!isAdded || _binding == null) {
+            Log.e(TAG, "handleError called but fragment view is gone. Error: ${e.message}")
+            return
+        }
+
         Log.e(TAG, "Error saving enrollment", e)
         showToast("Error: ${e.message}")
         binding.btnSubmitAnswer.isEnabled = true
@@ -415,6 +426,7 @@ class EnrollmentFragment : Fragment() {
     // ---------------- UTIL ----------------
 
     private fun showToast(message: String) {
+        if (!isAdded) return
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
